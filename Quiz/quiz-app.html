@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刷题小程序 - 叮咚802</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://unpkg.com/katex@0.16.9/dist/katex.min.js"></script>
+    <style>
+        .quiz-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .quiz-header {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .quiz-title {
+            color: #004494;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .filter-section {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .filter-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-select:hover {
+            border-color: #004494;
+            box-shadow: 0 2px 8px rgba(0, 68, 148, 0.2);
+        }
+        
+        .quiz-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-height: 500px;
+        }
+        
+        .question-card {
+            margin-bottom: 30px;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .question-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .question-tag {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .tag-subject {
+            background: #e3f2fd;
+            color: #fff;
+        }
+        
+        .tag-type {
+            background: #f39c12;
+            color: #fff;
+        }
+        
+        .tag-chapter {
+            background: #4caf50;
+            color: #fff;
+        }
+        
+        .question-number {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        .question-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .question-body h3,
+        .question-body h4 {
+            color: #004494;
+            margin: 20px 0 10px 0;
+        }
+        
+        .question-body strong {
+            color: #004494;
+            font-weight: bold;
+        }
+        
+        .question-body code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+        
+        .question-body .math-formula {
+            display: block;
+            text-align: center;
+            margin: 15px 0;
+            padding: 20px;
+            background: #fff8e1;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .question-body .math-formula sup,
+        .question-body .math-formula sub {
+            font-size: 0.8em;
+        }
+        
+        .answer-section {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #004494;
+        }
+        
+        .answer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .answer-title {
+            font-size: 1.2rem;
+            color: #004494;
+            font-weight: bold;
+        }
+        
+        .answer-content {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .answer-content h3,
+        .answer-content h4 {
+            color: #004494;
+            margin: 15px 0 10px 0;
+        }
+        
+        .answer-content strong {
+            color: #004494;
+            font-weight: bold;
+        }
+        
+        .answer-content code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+        
+        .answer-content .math-formula {
+            display: block;
+            text-align: center;
+            margin: 15px 0;
+            padding: 20px;
+            background: #fff8e1;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .answer-content .math-formula sup,
+        .answer-content .math-formula sub {
+            font-size: 0.8em;
+        }
+        
+        .answer-images {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .answer-image {
+            max-width: 100%;
+            height: 400px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            object-fit: contain;
+        }
+        
+        .answer-image-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .answer-images-horizontal {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .answer-images-horizontal .answer-image {
+            flex: 1;
+            max-width: calc(50% - 10px);
+            height: 400px;
+            object-fit: contain;
+        }
+        
+        .answer-images-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .answer-image-single {
+            height: 500px;
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            object-fit: contain;
+        }
+        
+        .answer-content-wrapper {
+            overflow: hidden;
+        }
+        
+        .answer-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .answer-image-right {
+            float: right;
+            width: 400px;
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .answer-image-float {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            object-fit: contain;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .nav-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #004494;
+            color: #fff;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            background: #0066cc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 68, 148, 0.3);
+        }
+        
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-show-answer {
+            background: #4caf50;
+            color: #fff;
+        }
+        
+        .btn-show-answer:hover {
+            background: #45a049;
+        }
+        
+        .btn-hide-answer {
+            background: #f44336;
+            color: #fff;
+        }
+        
+        .btn-hide-answer:hover {
+            background: #d32f2f;
+        }
+        
+        .btn-favorite {
+            background: #ff9800;
+            color: #fff;
+        }
+        
+        .btn-favorite:hover {
+            background: #f57c00;
+        }
+        
+        .btn-favorite.active {
+            background: #e65100;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #004494, #0066cc);
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+        
+        .progress-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .stats-info {
+            display: flex;
+            justify-content: space-around;
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #004494;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 1.1rem;
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        .katex {
+            font-size: 1.1em;
+        }
+        
+        .katex-display {
+            margin: 1em 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        
+        .question-body .katex,
+        .answer-content .katex {
+            color: #333;
+        }
+        
+        .question-body .katex-display,
+        .answer-content .katex-display {
+            margin: 15px 0;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease-in-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .modal-title {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .modal-close-btn:hover {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .favorite-item {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid #ffd700;
+        }
+        
+        .favorite-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .favorite-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .favorite-info {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .favorite-tag {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .favorite-tag-subject {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .favorite-tag-type {
+            background-color: #fce4ec;
+            color: #c2185b;
+        }
+        
+        .favorite-tag-chapter {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .favorite-time {
+            font-size: 0.85rem;
+            color: #999;
+        }
+        
+        .favorite-question {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .favorite-answer {
+            background-color: #fff;
+            border-radius: 6px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .favorite-answer-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .favorite-answer-content {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .favorite-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .favorite-empty-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+        
+        .favorite-empty-text {
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                max-height: 85vh;
+            }
+            
+            .modal-header {
+                padding: 16px 20px;
+            }
+            
+            .modal-title {
+                font-size: 1.3rem;
+            }
+            
+            .modal-body {
+                padding: 16px;
+            }
+            
+            .favorite-item {
+                padding: 12px;
+            }
+            
+            .favorite-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="main-header">
+            <div class="header-left">
+                <img src="../avatar.jpg" alt="用户头像" class="header-avatar" id="headerAvatar">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="../main.html" class="nav-item">首页</a></li>
+                    <li><a href="../exam-situation-analysis.html" class="nav-item">考情分析</a></li>
+                    <li><a href="../admission-analysis.html" class="nav-item">考录分析</a></li>
+                    <li><a href="../materials-summary.html" class="nav-item">资料汇总</a></li>
+                    <li><a href="../knowledge-point-analysis.html" class="nav-item">考点分析</a></li>
+                    <li><a href="#" class="nav-item">课程视频</a></li>
+                    <li><a href="../public-courses.html" class="nav-item">公共课</a></li>
+                    <li><a href="../Quiz/quiz-app.html" class="nav-item active">刷题中心</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <h1 class="quiz-title">📚 刷题小程序</h1>
+                    
+                    <div class="stats-info">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalQuestions">0</div>
+                            <div class="stat-label">总题数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="completedQuestions">0</div>
+                            <div class="stat-label">已完成</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="favoriteCount" style="cursor: pointer;" onclick="showFavoritesModal()">0</div>
+                            <div class="stat-label">收藏</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">学科筛选</label>
+                            <select class="filter-select" id="subjectFilter">
+                                <option value="">全部学科</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">类型筛选</label>
+                            <select class="filter-select" id="typeFilter">
+                                <option value="">全部类型</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">章节筛选</label>
+                            <select class="filter-select" id="chapterFilter">
+                                <option value="">全部章节</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quiz-content" id="quizContent">
+                    <div class="empty-state">
+                        <div class="empty-icon">📝</div>
+                        <div>正在加载题目...</div>
+                    </div>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button class="nav-btn" id="prevBtn" disabled>← 上一题</button>
+                    <button class="nav-btn" id="nextBtn" disabled>下一题 →</button>
+                </div>
+            </div>
+            
+            <div class="modal-overlay" id="favoritesModal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">⭐ 我的收藏</h2>
+                        <button class="modal-close-btn" onclick="closeFavoritesModal()">×</button>
+                    </div>
+                    <div class="modal-body" id="favoritesList">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let questions = [];
+        let filteredQuestions = [];
+        let currentIndex = 0;
+        let favorites = new Map();
+        let completedQuestions = new Set();
+        let showAnswer = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuestions();
+            loadProgress();
+            updateStats();
+        });
+
+        async function loadQuestions() {
+            try {
+                console.log('开始加载题目...');
+                const timestamp = new Date().getTime();
+                const response = await fetch(`../Question/question.json?t=${timestamp}`);
+                console.log('响应状态:', response.status, response.statusText);
+                console.log('响应类型:', response.type);
+                console.log('响应头:', response.headers);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                let text = await response.text();
+                console.log('响应文本长度:', text.length);
+                console.log('响应文本前100字符:', text.substring(0, 100));
+                
+                // 移除BOM（如果存在）
+                if (text.charCodeAt(0) === 0xFEFF) {
+                    text = text.substring(1);
+                }
+                
+                const data = JSON.parse(text);
+                console.log('解析后的数据:', data);
+                console.log('题目数量:', data.length);
+                
+                questions = data;
+                applyFilters();
+            } catch (error) {
+                console.error('加载题目失败:', error);
+                console.error('错误堆栈:', error.stack);
+                document.getElementById('quizContent').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <div>加载题目失败，请刷新页面重试</div>
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 10px;">错误信息: ${error.message}</div>
+                    </div>
+                `;
+            }
+        }
+
+        function applyFilters() {
+            const subjectFilter = document.getElementById('subjectFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const chapterFilter = document.getElementById('chapterFilter').value;
+
+            filteredQuestions = questions.filter(q => {
+                const subject = q['subject'] || q['学科'];
+                const type = q['type'] || q['类型'];
+                const chapter = q['chapter'] || q['章节'];
+                
+                if (subjectFilter && subject !== subjectFilter) return false;
+                if (typeFilter && type !== typeFilter) return false;
+                if (chapterFilter && chapter !== chapterFilter) return false;
+                return true;
+            });
+
+            currentIndex = 0;
+            updateFilterOptions();
+            displayQuestion();
+        }
+
+        function updateFilterOptions() {
+            const subjects = [...new Set(questions.map(q => q['subject'] || q['学科']))];
+            const types = [...new Set(questions.map(q => q['type'] || q['类型']))];
+            const chapters = [...new Set(questions.map(q => q['chapter'] || q['章节']))];
+
+            updateSelectOptions('subjectFilter', subjects, '全部学科');
+            updateSelectOptions('typeFilter', types, '全部类型');
+            updateSelectOptions('chapterFilter', chapters, '全部章节');
+        }
+
+        function updateSelectOptions(selectId, options, defaultText) {
+            const select = document.getElementById(selectId);
+            const currentValue = select.value;
+            select.innerHTML = `<option value="">${defaultText}</option>`;
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                select.appendChild(option);
+            });
+            select.value = currentValue;
+        }
+
+        function displayQuestion() {
+            const content = document.getElementById('quizContent');
+            
+            if (filteredQuestions.length === 0) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <div>没有找到符合条件的题目</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const question = filteredQuestions[currentIndex];
+            const isFavorite = favorites.has(currentIndex);
+            const isCompleted = completedQuestions.has(currentIndex);
+            
+            const subject = question['subject'] || question['学科'];
+            const type = question['type'] || question['类型'];
+            const chapter = question['chapter'] || question['章节'];
+            const questionText = question['question'] || question['题目'];
+            const answerText = question['answer'] || question['参考答案'];
+
+            const is2201X1 = questionText.includes('【2201 X1】');
+            const is1702X4 = questionText.includes('【1702 X4】');
+            const is2002X1 = questionText.includes('【2002 X1】');
+            const is1902X3 = questionText.includes('【1902 X3】');
+            const is1402X2 = questionText.includes('【1402 X2】');
+            const is2102X2 = questionText.includes('【2102 X2】');
+            const is1801X1 = questionText.includes('【1801 X1】');
+            const is2102X1 = questionText.includes('【2102 X1】');
+            const is2001X1 = questionText.includes('【2001 X1】');
+            const is1802X4 = questionText.includes('【1802 X4】');
+            const is1201X4 = questionText.includes('【1201 X4】');
+            const is1701X3 = questionText.includes('【1701 X3】');
+            const is1602X1 = questionText.includes('【1602 X1】');
+            const is1902X1 = questionText.includes('【1902 X1】');
+            const is2301X2 = questionText.includes('【2301 X2】');
+            const is2101X1_2 = questionText.includes('【2101 X1】');
+            const is2002X2 = questionText.includes('【2002 X2】');
+            const is1902X2 = questionText.includes('【1902 X2】');
+            const is1302X2 = questionText.includes('【1302 X2】');
+            const is1402X3 = questionText.includes('【1402X3】');
+            const is1601X3 = questionText.includes('【1601 X3】');
+            const is2201X4 = questionText.includes('【2201 X4】');
+            const is2202X3 = questionText.includes('【2202 X3】');
+            const is2202X4 = questionText.includes('【2202 X4】');
+            const is2102X4 = questionText.includes('【2102 X4】');
+            const is2302X4 = questionText.includes('【2302 X4】');
+            const is2502X2 = questionText.includes('【2502 X2】');
+            const is2201X3 = questionText.includes('【2201 X3】');
+            const is2001X3 = questionText.includes('【2001 X3】');
+            const is1901X3 = questionText.includes('【1901X3】');
+            const is2002X4 = questionText.includes('【2002 X4】');
+            const is1902X4 = questionText.includes('【1902 X4】');
+            const is1801X3 = questionText.includes('【1801 X3】');
+            const is1702X3 = questionText.includes('【1702 X3】');
+            const is1601X1 = questionText.includes('【1601 X1】');
+            const is1502X2 = questionText.includes('【1502 X2】');
+            const is2301X3 = questionText.includes('【2301 X3】');
+            const is1701X1 = questionText.includes('【1701 X1】');
+            const is2101X4 = questionText.includes('【2101 X4】');
+            const is1402X6 = questionText.includes('【1402 X6】');
+            const is1301X4 = questionText.includes('【1301 X4】');
+            const is1202X3 = questionText.includes('【1202 X3】');
+            const is1801X4 = questionText.includes('【1801 X4】');
+            const is1702X2 = questionText.includes('【1702 X2】');
+            const is1601X2 = questionText.includes('【1601 X2】');
+
+            const questionHtml = `
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-info">
+                            <span class="question-tag tag-subject">${subject}</span>
+                            <span class="question-tag tag-type">${type}</span>
+                            <span class="question-tag tag-chapter">${chapter}</span>
+                            <span class="question-number">第 ${currentIndex + 1} / ${filteredQuestions.length} 题</span>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn btn-favorite ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(${currentIndex})">
+                                ${isFavorite ? '★ 已收藏' : '☆ 收藏'}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="question-body">
+                        ${parseMarkdown(questionText)}
+                    </div>
+                    <div class="answer-section" id="answerSection" style="display: ${showAnswer ? 'block' : 'none'}">
+                        <div class="answer-header">
+                            <div class="answer-title">💡 参考答案</div>
+                            <button class="action-btn btn-hide-answer" onclick="toggleAnswer()">
+                                隐藏答案
+                            </button>
+                        </div>
+                        ${is1902X3 ? `
+                        <div class="answer-content-wrapper">
+                            <div class="answer-text">
+                                ${parseMarkdown(answerText)}
+                            </div>
+                            <div class="answer-image-right">
+                                <img src="../Files/Photos/消费者行为/1902X3.png" alt="劳动供给曲线图" class="answer-image-float">
+                            </div>
+                        </div>
+                        ` : `
+                        <div class="answer-content">
+                            ${parseMarkdown(answerText)}
+                        </div>
+                        `}
+                        ${is2201X1 ? `
+                        <div class="answer-images">
+                            <img src="../Files/Photos/消费者行为/2201X1-1.png" alt="收入消费曲线图" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2201X1-2.png" alt="价格消费曲线图" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1702X4 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1702X4.png" alt="无差异曲线图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2002X1 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2002X1.png" alt="替代效应和收入效应图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1402X2 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1402X2.png" alt="补贴方式比较图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2102X2 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2102X2.png" alt="完全竞争厂商图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1801X1 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1801X1.png" alt="企业亏损分析图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2102X1 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2102X1.png" alt="技术进步福利图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2001X1 ? `
+                        <div class="answer-images-horizontal">
+                            <img src="../Files/Photos/消费者行为/2001X1.png" alt="均衡分析图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2001X1-2.png" alt="均衡分析图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1802X4 ? `
+                        <div class="answer-images-horizontal">
+                            <img src="../Files/Photos/消费者行为/1802X4-1.png" alt="弹性与剩余图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1802X4-2.png" alt="弹性与剩余图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1201X4 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1201X4.png" alt="国际贸易分析图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1701X3 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1701X3.png" alt="价格歧视图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1602X1 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1602X1.png" alt="古诺与卡特尔图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1902X1 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/1902X1-1.png" alt="博弈支付矩阵图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1902X1-2.png" alt="博弈支付矩阵图2" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1902X1-3.png" alt="博弈支付矩阵图3" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is2301X2 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/2301X2-1.png" alt="征税影响图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2301X2-2.png" alt="征税影响图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is2101X1_2 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/2101X1.png" alt="负外部性征税图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2101X1-2.png" alt="负外部性征税图2" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2101X1-3.png" alt="负外部性征税图3" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2101X1-4.png" alt="负外部性征税图4" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2101X1-5.png" alt="负外部性征税图5" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is2002X2 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/2002X2-1.png" alt="福利分析图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2002X2-2.png" alt="福利分析图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1902X2 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/1902X2-1.png" alt="外部性分析图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1902X2-2.png" alt="外部性分析图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1302X2 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1302X2.png" alt="博弈分析图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1402X3 ? `
+                        <div class="answer-images-horizontal">
+                            <img src="../Files/Photos/消费者行为/1402X3.png" alt="劳动力市场完全均衡图" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1402X3-2.png" alt="劳动力市场信息不对称均衡图" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1601X3 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/1601X3-1.png" alt="完全竞争市场最低工资图" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1601X3-2.png" alt="买方垄断市场最低工资图" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is2201X4 ? `
+                        <div class="answer-images-horizontal">
+                            <img src="../Files/Photos/消费者行为/2201X4-1.png" alt="凯恩斯交叉图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2201X4-2.png" alt="凯恩斯交叉图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is2202X3 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2202X3.png" alt="凯恩斯交叉均衡图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2202X4 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2202X4.png" alt="LM曲线图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2102X4 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2102X4.png" alt="货币需求流动性陷阱图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2302X4 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2302X4.png" alt="LM曲线货币政策效果图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2502X2 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/2502X2.png" alt="货币需求图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2502X2-2.png" alt="货币需求图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is2201X3 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2201X3.png" alt="IS-LM模型图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2001X3 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/2001X3-1.png" alt="AD曲线推导图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2001X3-2.png" alt="AD曲线推导图2" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/2001X3-3.png" alt="AD曲线推导图3" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1901X3 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1901X3.png" alt="总供给曲线图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2002X4 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2002X4.png" alt="地震影响图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1902X4 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1902X4.png" alt="供给侧改革图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1801X3 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/1801X3.png" alt="AD-AS模型图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1801X3-2.png" alt="AD-AS模型图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1702X3 ? `
+                        <div class="answer-images-horizontal">
+                            <img src="../Files/Photos/消费者行为/1702X3-1.png" alt="技术进步图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1702X3-2.png" alt="技术进步图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1601X1 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/1601X1.png" alt="国外需求减少影响图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1601X1-2.png" alt="国外需求减少影响图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1502X2 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/1502X2-1.png" alt="货币供给减少影响图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1502X2-2.png" alt="货币供给减少影响图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is2301X3 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2301X3.png" alt="货币乘数图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1701X1 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1701X1.png" alt="价格冲击图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is2101X4 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/2101X4.png" alt="附加预期的菲利普斯曲线图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1402X6 ? `
+                        <div class="answer-images-horizontal">
+                            <img src="../Files/Photos/消费者行为/1402X6.png" alt="菲利普斯曲线推导图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1402X6-2.png" alt="菲利普斯曲线推导图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1301X4 ? `
+                        <div class="answer-images-horizontal">
+                            <img src="../Files/Photos/消费者行为/1301X4-1.png" alt="短期总供给曲线与菲利普斯曲线图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1301X4-2.png" alt="短期总供给曲线与菲利普斯曲线图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1202X3 ? `
+                        <div class="answer-images-horizontal">
+                            <img src="../Files/Photos/消费者行为/1202X3-1.png" alt="菲利普斯曲线图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1202X3-2.png" alt="菲利普斯曲线图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1801X4 ? `
+                        <div class="answer-image-container">
+                            <img src="../Files/Photos/消费者行为/1801X4.png" alt="索罗模型稳态图" class="answer-image-single">
+                        </div>
+                        ` : ''}
+                        ${is1702X2 ? `
+                        <div class="answer-images-vertical">
+                            <img src="../Files/Photos/消费者行为/1702X2-1.png" alt="索罗模型图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1702X2-2.png" alt="索罗模型图2" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1702X2-3.png" alt="索罗模型图3" class="answer-image">
+                        </div>
+                        ` : ''}
+                        ${is1601X2 ? `
+                        <div class="answer-images-horizontal">
+                            <img src="../Files/Photos/消费者行为/1601X2-1.png" alt="投资影响图1" class="answer-image">
+                            <img src="../Files/Photos/消费者行为/1601X2-2.png" alt="投资影响图2" class="answer-image">
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="action-buttons">
+                        <button class="action-btn btn-show-answer" onclick="toggleAnswer()">
+                            ${showAnswer ? '隐藏答案' : '查看答案'}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            content.innerHTML = questionHtml;
+            updateNavButtons();
+            
+            if (isCompleted) {
+                markAsCompleted();
+            }
+        }
+
+        function parseMarkdown(text) {
+            if (!text) return '';
+            
+            let html = text;
+            
+            // 先处理块级公式 $$...$$ 和 \[...\]
+            html = html.replace(/\$\$([^$]+)\$\$/g, function(match, p1) {
+                try {
+                    return 'KATEX_BLOCK_START' + p1 + 'KATEX_BLOCK_END';
+                } catch (e) {
+                    console.error('KaTeX渲染错误:', e);
+                    return match;
+                }
+            });
+            
+            html = html.replace(/\\\[(.*?)\\\]/g, function(match, p1) {
+                try {
+                    return 'KATEX_BLOCK_START' + p1 + 'KATEX_BLOCK_END';
+                } catch (e) {
+                    console.error('KaTeX渲染错误:', e);
+                    return match;
+                }
+            });
+            
+            // 处理行内公式 $...$ 和 \(...\)
+            html = html.replace(/\$([^$]+)\$/g, function(match, p1) {
+                try {
+                    return 'KATEX_INLINE_START' + p1 + 'KATEX_INLINE_END';
+                } catch (e) {
+                    console.error('KaTeX渲染错误:', e);
+                    return match;
+                }
+            });
+            
+            html = html.replace(/\\\((.*?)\\\)/g, function(match, p1) {
+                try {
+                    return 'KATEX_INLINE_START' + p1 + 'KATEX_INLINE_END';
+                } catch (e) {
+                    console.error('KaTeX渲染错误:', e);
+                    return match;
+                }
+            });
+            
+            // 处理其他Markdown格式（在公式占位符之外）
+            html = html
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/__(.*?)__/g, '<u>$1</u>')
+                .replace(/~~(.*?)~~/g, '<del>$1</del>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\n/g, '<br>');
+            
+            // 渲染KaTeX公式
+            html = html.replace(/KATEX_BLOCK_START(.*?)KATEX_BLOCK_END/g, function(match, p1) {
+                try {
+                    if (typeof katex !== 'undefined' && katex.renderToString) {
+                        return katex.renderToString(p1, { displayMode: true, throwOnError: false });
+                    } else {
+                        return '$$' + p1 + '$$';
+                    }
+                } catch (e) {
+                    console.error('KaTeX渲染错误:', e);
+                    return match;
+                }
+            });
+            
+            html = html.replace(/KATEX_INLINE_START(.*?)KATEX_INLINE_END/g, function(match, p1) {
+                try {
+                    if (typeof katex !== 'undefined' && katex.renderToString) {
+                        return katex.renderToString(p1, { displayMode: false, throwOnError: false });
+                    } else {
+                        return '$' + p1 + '$';
+                    }
+                } catch (e) {
+                    console.error('KaTeX渲染错误:', e);
+                    return match;
+                }
+            });
+            
+            return html;
+        }
+
+        function toggleAnswer() {
+            showAnswer = !showAnswer;
+            const answerSection = document.getElementById('answerSection');
+            if (answerSection) {
+                answerSection.style.display = showAnswer ? 'block' : 'none';
+            }
+            markAsCompleted();
+        }
+
+        function toggleFavorite(index) {
+            if (favorites.has(index)) {
+                favorites.delete(index);
+            } else {
+                favorites.set(index, {
+                    timestamp: new Date().toISOString()
+                });
+            }
+            saveProgress();
+            displayQuestion();
+            updateStats();
+        }
+
+        function showFavoritesModal() {
+            const modal = document.getElementById('favoritesModal');
+            const favoritesList = document.getElementById('favoritesList');
+            
+            if (favorites.size === 0) {
+                favoritesList.innerHTML = `
+                    <div class="favorite-empty">
+                        <div class="favorite-empty-icon">⭐</div>
+                        <div class="favorite-empty-text">暂无收藏题目</div>
+                    </div>
+                `;
+            } else {
+                const favoriteArray = Array.from(favorites.entries()).sort((a, b) => {
+                    return new Date(b[1].timestamp) - new Date(a[1].timestamp);
+                });
+                
+                favoritesList.innerHTML = favoriteArray.map(([index, data]) => {
+                    const question = questions[index];
+                    if (!question) return '';
+                    
+                    const subject = question['subject'] || question['学科'];
+                    const type = question['type'] || question['类型'];
+                    const chapter = question['chapter'] || question['章节'];
+                    const questionText = question['question'] || question['题目'];
+                    const answerText = question['answer'] || question['参考答案'];
+                    const favoriteTime = new Date(data.timestamp).toLocaleString('zh-CN');
+                    
+                    return `
+                        <div class="favorite-item">
+                            <div class="favorite-header">
+                                <div class="favorite-info">
+                                    <span class="favorite-tag favorite-tag-subject">${subject}</span>
+                                    <span class="favorite-tag favorite-tag-type">${type}</span>
+                                    <span class="favorite-tag favorite-tag-chapter">${chapter}</span>
+                                </div>
+                                <div class="favorite-time">${favoriteTime}</div>
+                            </div>
+                            <div class="favorite-question">
+                                ${parseMarkdown(questionText)}
+                            </div>
+                            <div class="favorite-answer">
+                                <div class="favorite-answer-title">💡 参考答案</div>
+                                <div class="favorite-answer-content">
+                                    ${parseMarkdown(answerText)}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFavoritesModal() {
+            const modal = document.getElementById('favoritesModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function markAsCompleted() {
+            completedQuestions.add(currentIndex);
+            saveProgress();
+            updateStats();
+        }
+
+        function updateNavButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === filteredQuestions.length - 1;
+        }
+
+        function goToPrevious() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                showAnswer = false;
+                displayQuestion();
+            }
+        }
+
+        function goToNext() {
+            if (currentIndex < filteredQuestions.length - 1) {
+                currentIndex++;
+                showAnswer = false;
+                displayQuestion();
+            }
+        }
+
+        function saveProgress() {
+            const progress = {
+                favorites: Array.from(favorites.entries()),
+                completed: Array.from(completedQuestions),
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('quizProgress', JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('quizProgress');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                favorites = new Map();
+                completedQuestions = new Set(progress.completed || []);
+                
+                if (progress.favorites && Array.isArray(progress.favorites)) {
+                    progress.favorites.forEach(item => {
+                        if (Array.isArray(item) && item.length === 2) {
+                            favorites.set(item[0], item[1]);
+                        } else if (typeof item === 'number') {
+                            favorites.set(item, {
+                                timestamp: new Date().toISOString()
+                            });
+                        }
+                    });
+                }
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalQuestions').textContent = questions.length;
+            document.getElementById('completedQuestions').textContent = completedQuestions.size;
+            document.getElementById('favoriteCount').textContent = favorites.size;
+            
+            const progressPercent = questions.length > 0 ? Math.round((completedQuestions.size / questions.length) * 100) : 0;
+            const progressBar = document.querySelector('.progress-fill');
+            if (progressBar) {
+                progressBar.style.width = `${progressPercent}%`;
+            }
+        }
+
+        document.getElementById('subjectFilter').addEventListener('change', applyFilters);
+        document.getElementById('typeFilter').addEventListener('change', applyFilters);
+        document.getElementById('chapterFilter').addEventListener('change', applyFilters);
+        document.getElementById('prevBtn').addEventListener('click', goToPrevious);
+        document.getElementById('nextBtn').addEventListener('click', goToNext);
+        
+        document.getElementById('favoritesModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFavoritesModal();
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeFavoritesModal();
+            }
+        });
+    </script>
+</body>
+</html>

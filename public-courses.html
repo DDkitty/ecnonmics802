@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公共课 - 叮咚802</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .courses-container {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2rem;
+            color: #004494;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px;
+            padding: 20px 0;
+        }
+
+        @media (max-width: 1200px) {
+            .courses-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .courses-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .courses-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .course-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .course-card:nth-child(1) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .course-card:nth-child(2) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .course-card:nth-child(3) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .course-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .course-name {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .course-desc {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="main-header">
+            <div class="header-left">
+                <img src="avatar.jpg" alt="用户头像" class="header-avatar" id="headerAvatar">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="main.html" class="nav-item">首页</a></li>
+                    <li><a href="exam-situation-analysis.html" class="nav-item">考情分析</a></li>
+                    <li><a href="admission-analysis.html" class="nav-item">考录分析</a></li>
+                    <li><a href="materials-summary.html" class="nav-item">资料汇总</a></li>
+                    <li><a href="knowledge-point-analysis.html" class="nav-item">考点分析</a></li>
+                    <li><a href="#" class="nav-item">课程视频</a></li>
+                    <li><a href="public-courses.html" class="nav-item active">公共课</a></li>
+                    <li><a href="Quiz/quiz-app.html" class="nav-item">刷题中心</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <div class="courses-container">
+                <h1 class="page-title">📚 公共课资源</h1>
+                
+                <div class="courses-grid">
+                    <a href="https://pan.quark.cn/s/2197a7a27d1c" target="_blank" class="course-card">
+                        <div class="course-icon">🇨🇳</div>
+                        <div class="course-name">27考研政治</div>
+                        <div class="course-desc">点击访问资源</div>
+                    </a>
+
+                    <a href="https://pan.quark.cn/s/5fc2d790b312" target="_blank" class="course-card">
+                        <div class="course-icon">📖</div>
+                        <div class="course-name">27考研英语</div>
+                        <div class="course-desc">点击访问资源</div>
+                    </a>
+
+                    <a href="https://pan.quark.cn/s/6bf31fbaa77c" target="_blank" class="course-card">
+                        <div class="course-icon">📐</div>
+                        <div class="course-name">27考研数学</div>
+                        <div class="course-desc">点击访问资源</div>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

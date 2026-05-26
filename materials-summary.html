@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资料汇总 - 叮咚802</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .materials-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .materials-title {
+            color: #004494;
+            border-bottom: 2px solid #ff0000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .materials-nav {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .materials-nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #FFF8DC;
+            transition: background-color 0.3s ease;
+        }
+        .materials-nav ul.active {
+            background-color: #FFE4E1;
+        }
+        .materials-nav .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #333;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+        }
+        .materials-nav .nav-item:hover {
+            background-color: #e0e0e0;
+        }
+        .materials-nav .nav-item.active {
+            background-color: #ffffff;
+            color: #004494;
+            border-bottom: 3px solid #004494;
+            font-weight: bold;
+        }
+        .materials-content {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.3s ease;
+        }
+        .file-item:hover {
+            background-color: #f9f9f9;
+        }
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+        .file-icon {
+            font-size: 2rem;
+            color: #0078FF;
+        }
+        .file-name {
+            color: #333;
+            font-size: 1rem;
+            flex: 1;
+        }
+        .download-btn {
+            padding: 8px 20px;
+            background-color: #0078FF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .download-btn:hover {
+            background-color: #0056cc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 120, 255, 0.3);
+        }
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 1.1rem;
+        }
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        @media (max-width: 768px) {
+            .materials-nav ul {
+                flex-direction: column;
+            }
+            .materials-nav .nav-item {
+                border-bottom: 1px solid #e0e0e0;
+                text-align: left;
+                padding-left: 20px;
+            }
+            .materials-nav .nav-item.active {
+                border-bottom: 1px solid #e0e0e0;
+                border-left: 3px solid #004494;
+            }
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .file-info {
+                width: 100%;
+            }
+            .download-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="main-header">
+            <div class="header-left">
+                <img src="avatar.jpg" alt="用户头像" class="header-avatar" id="headerAvatar">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="main.html" class="nav-item">首页</a></li>
+                    <li><a href="exam-situation-analysis.html" class="nav-item">考情分析</a></li>
+                    <li><a href="admission-analysis.html" class="nav-item">考录分析</a></li>
+                    <li><a href="materials-summary.html" class="nav-item active">资料汇总</a></li>
+                    <li><a href="knowledge-point-analysis.html" class="nav-item">考点分析</a></li>
+                    <li><a href="#" class="nav-item">课程视频</a></li>
+                    <li><a href="public-courses.html" class="nav-item">公共课</a></li>
+                    <li><a href="Quiz/quiz-app.html" class="nav-item">刷题中心</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <main class="main-content">
+            <div class="materials-container">
+                <h1 class="materials-title">资料汇总</h1>
+                
+                <div class="materials-nav">
+                    <ul>
+                        <li class="nav-item active" data-tab="textbooks">教材</li>
+                        <li class="nav-item" data-tab="answer-sheets">答题卡</li>
+                        <li class="nav-item" data-tab="exam-papers">四套卷</li>
+                        <li class="nav-item" data-tab="summary">汇总</li>
+                    </ul>
+                </div>
+                
+                <div class="materials-content">
+                    <div class="tab-content active" id="textbooks">
+                        <ul class="file-list">
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">（2024）概念原理综合记忆手册.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">（2024）历年真题及详细参考答案.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">（2024）综合习题 汇编及详细解析.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">（2024）政治经济学考试大纲解析.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">（2024）西方经济学大纲解析.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">西财经济学政治经济学思维导图.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">(高鸿业)_西方经济学（宏观部分_第7版）.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">(高鸿业)_西方经济学（微观部分_第7版）.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">西财考研经济学2002-2006真题及其答案.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">西财考研经济学2007-2008真题及其答案.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">西方经济学 微观部分 第八版 高鸿业主编.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">西方经济学 宏观部分 第八版 高鸿业主编.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">平狄克《微观经济学》（第9版）笔记和课后习题详解.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">尼科尔森11版笔记和课后题.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">曼昆《宏观经济学》（第10版）笔记和课后习题.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">高鸿业《西方经济学（微观部分）》（第8版）课后习题详解.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">高鸿业《西方经济学（宏观部分）》（第8版）课后习题.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tab-content active" id="answer-sheets">
+                        <ul class="file-list">
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">考研专业课自主命题答题纸（B4打印）.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">全国硕士研究生入学统一考试（英语（一）试题答题卡）.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">全国硕士研究生统一考试答题卡（思想政治理论）.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">数学答题卡（21新大纲）.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tab-content" id="exam-papers">
+                        <ul class="file-list">
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">（2024）西财考前4套模拟卷.zip</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">（2025）西财考前4套模拟卷（含热点分析）.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">（2026）西财考前4套模拟卷.zip</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tab-content" id="summary">
+                        <ul class="file-list">
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">西财考研宏观知识点汇总.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">西财考研微观知识点汇总.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                            <li class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name">西财802题型汇总.pdf</span>
+                                </div>
+                                <a href="https://pan.baidu.com/s/1VIR1orAiIVYpxfNqr_g3fA?pwd=68ea" class="download-btn" target="_blank">下载</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.materials-nav .nav-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    navItems.forEach(navItem => navItem.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

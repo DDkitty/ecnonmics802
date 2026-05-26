@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>费用明细 - 叮咚802</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .content-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #004494; /* 西财蓝 */
+            border-bottom: 2px solid #ff0000; /* 红色下划线 */
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #666;
+            margin-top: 20px;
+        }
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        ul {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="main-header">
+            <div class="header-left">
+                <img src="avatar.jpg" alt="用户头像" class="header-avatar" id="headerAvatar">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="main.html" class="nav-item">首页</a></li>
+                    <li><a href="exam-situation-analysis.html" class="nav-item">考情分析</a></li>
+                    <li><a href="admission-analysis.html" class="nav-item">考录分析</a></li>
+                    <li><a href="materials-summary.html" class="nav-item">资料汇总</a></li>
+                    <li><a href="knowledge-point-analysis.html" class="nav-item">考点分析</a></li>
+                    <li><a href="#" class="nav-item">课程视频</a></li>
+                    <li><a href="public-courses.html" class="nav-item">公共课</a></li>
+                    <li><a href="Quiz/quiz-app.html" class="nav-item">刷题中心</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <main class="main-content">
+            <div class="content-container">
+                <h1>奖助学金与学杂费</h1>
+                
+                <h3>💰奖助学金</h3>
+                
+                <ol>
+                    <li>
+                        <strong>国家助学金</strong>：每人都有，每个月500元，发12个月。寒暑假的助学金会提前发放。
+                    </li>
+                    <li>
+                        <strong>学业奖学金</strong>：第一学年所有考生均可以拿到奖学金，但第二三学年有15%的学生拿不到奖学金。
+                        <br>
+                        这个措施很明显是要鼓励同学们入校之后将更多精力放在学习上，而不像以前哪怕排到最后一名，也可以拿到奖学金。同时这也是对科学学位研究生学费降低的一种补偿。
+                    </li>
+                </ol>
+                
+                <!-- 第8行下方插入西财奖学金.png -->
+                <div class="image-container">
+                    <img src="Files/Photos/西财奖学金.png" alt="西财奖学金">
+                </div>
+                
+                <h3>💰学费</h3>
+                
+                <!-- 第10行下方插入西财学费.png -->
+                <div class="image-container">
+                    <img src="Files/Photos/西财学费.png" alt="西财学费">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

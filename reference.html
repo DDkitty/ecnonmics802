@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>西财考研知识点全方位分析仪表盘</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.0.0/dist/echarts-wordcloud.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 6px solid #3498db;
+        }
+        
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .title::before {
+            content: "📊";
+            font-size: 36px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        .controls {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-end;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+        }
+        
+        .filter-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            color: #333;
+            transition: all 0.3s;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .btn {
+            padding: 10px 24px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-reset {
+            background: #95a5a6;
+        }
+        
+        .btn-reset:hover {
+            background: #7f8c8d;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: auto;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        
+        .chart-container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-wrapper {
+            height: 300px;
+            width: 100%;
+        }
+        
+        /* 统计卡片样式 */
+        .stats-container {
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            border-top: 4px solid #3498db;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+        
+        .stat-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+        
+        /* 图表布局 */
+        .trend-chart {
+            grid-column: span 6;
+        }
+        
+        .subject-pie {
+            grid-column: span 3;
+        }
+        
+        .radar-chart {
+            grid-column: span 3;
+        }
+        
+        .time-heatmap {
+            grid-column: span 6;
+        }
+        
+        .stacked-bar {
+            grid-column: span 6;
+        }
+        
+        .wordcloud {
+            grid-column: span 4;
+        }
+        
+        .boxplot {
+            grid-column: span 4;
+        }
+        
+        .sankey-chart {
+            grid-column: span 4;
+        }
+        
+        .network-chart {
+            grid-column: span 12;
+            height: 500px;
+        }
+        
+        .network-chart .chart-wrapper {
+            height: 400px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            
+            .trend-chart, .time-heatmap, .stacked-bar, .network-chart {
+                grid-column: span 6;
+            }
+            
+            .subject-pie, .radar-chart, .wordcloud, .boxplot, .sankey-chart {
+                grid-column: span 3;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .trend-chart, .time-heatmap, .stacked-bar, .network-chart,
+            .subject-pie, .radar-chart, .wordcloud, .boxplot, .sankey-chart {
+                grid-column: span 2;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 16px;
+            color: #7f8c8d;
+        }
+        
+        .insight-panel {
+            grid-column: span 12;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .insight-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .insight-content {
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .insight-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .insight-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .insight-list li::before {
+            content: "•";
+            color: #3498db;
+            font-size: 20px;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .chart-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-small:hover {
+            background: #e9ecef;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页面标题 -->
+        <div class="header">
+            <h1 class="title">西财考研知识点全方位分析仪表盘</h1>
+            <div class="subtitle">
+                基于2015-2026年西财考研真题数据，提供多维度的知识点考察分析。支持按年份和学科筛选，帮助您更好地了解考试重点和变化趋势。
+            </div>
+        </div>
+        
+        <!-- 控制面板 -->
+        <div class="controls">
+            <div class="filter-group">
+                <label class="filter-label">年份范围</label>
+                <select class="filter-select" id="year-range" multiple>
+                    <option value="all" selected>全部年份</option>
+                </select>
+                <small style="color: #7f8c8d; margin-top: 5px;">可多选，Ctrl+点击取消选择</small>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">学科筛选</label>
+                <select class="filter-select" id="subject-filter">
+                    <option value="all" selected>全部学科</option>
+                    <option value="微观经济学">微观经济学</option>
+                    <option value="宏观经济学">宏观经济学</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">章节筛选</label>
+                <select class="filter-select" id="chapter-filter">
+                    <option value="all" selected>全部章节</option>
+                </select>
+            </div>
+            
+            <button class="btn" id="apply-filters">
+                <span>应用筛选</span>
+            </button>
+            
+            <button class="btn btn-reset" id="reset-filters">
+                <span>重置筛选</span>
+            </button>
+        </div>
+        
+        <!-- 统计卡片 -->
+        <div class="stats-container" id="stats-container">
+            <!-- 统计卡片将通过JavaScript动态生成 -->
+        </div>
+        
+        <!-- 图表仪表盘 -->
+        <div class="dashboard">
+            <!-- 1. 历年趋势分析 -->
+            <div class="chart-container trend-chart">
+                <div class="chart-header">
+                    <h3 class="chart-title">📈 历年考察趋势分析</h3>
+                    <div class="chart-actions">
+                        <button class="btn-small" onclick="toggleChartType('trend')">切换图表</button>
+                    </div>
+                </div>
+                <div class="chart-wrapper" id="trend-chart"></div>
+            </div>
+            
+            <!-- 2. 学科占比分析 -->
+            <div class="chart-container subject-pie">
+                <h3 class="chart-title">🥧 学科占比分析</h3>
+                <div class="chart-wrapper" id="subject-pie-chart"></div>
+            </div>
+            
+            <!-- 3. 章节对比雷达图 -->
+            <div class="chart-container radar-chart">
+                <h3 class="chart-title">📊 章节对比雷达图</h3>
+                <div class="chart-wrapper" id="radar-chart"></div>
+            </div>
+            
+            <!-- 4. 时间-章节热力图 -->
+            <div class="chart-container time-heatmap">
+                <h3 class="chart-title">🔥 时间-章节热力图</h3>
+                <div class="chart-wrapper" id="time-chapter-heatmap"></div>
+            </div>
+            
+            <!-- 5. 堆积柱状图 -->
+            <div class="chart-container stacked-bar">
+                <h3 class="chart-title">📊 章节考察分布（堆积柱状图）</h3>
+                <div class="chart-wrapper" id="stacked-bar-chart"></div>
+            </div>
+            
+            <!-- 6. 高频知识点词云 -->
+            <div class="chart-container wordcloud">
+                <h3 class="chart-title">☁️ 高频知识点词云</h3>
+                <div class="chart-wrapper" id="wordcloud-chart"></div>
+            </div>
+            
+            <!-- 7. 箱线图 -->
+            <div class="chart-container boxplot">
+                <h3 class="chart-title">📦 考察次数分布箱线图</h3>
+                <div class="chart-wrapper" id="boxplot-chart"></div>
+            </div>
+            
+            <!-- 8. 桑基图 -->
+            <div class="chart-container sankey-chart">
+                <h3 class="chart-title">🌊 知识点流转桑基图</h3>
+                <div class="chart-wrapper" id="sankey-chart"></div>
+            </div>
+            
+            <!-- 9. 知识点关联网络图 -->
+            <div class="chart-container network-chart">
+                <h3 class="chart-title">🕸️ 知识点关联网络图</h3>
+                <div class="chart-wrapper" id="network-chart"></div>
+            </div>
+        </div>
+        
+        <!-- 分析洞察面板 -->
+        <div class="insight-panel">
+            <h3 class="insight-title">💡 分析洞察</h3>
+            <div class="insight-content">
+                <ul class="insight-list" id="insight-list">
+                    <!-- 分析洞察将通过JavaScript动态生成 -->
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>西财考研知识点分析仪表盘 © 2024 | 数据范围：2015-2026年考研真题</p>
+            <p>可视化工具：ECharts 5 | 数据来源：西财考研历年真题整理</p>
+        </div>
+    </div>
+
+    <script>
+        // 原始数据 - 根据提供的Excel数据转换
+        const rawData = [
+            { year: 2026, subject: '微观经济学', chapter: '消费者行为', point: '需求函数求解', count: 1 },
+            { year: 2026, subject: '微观经济学', chapter: '消费者行为', point: '价格效应', count: 1 },
+            { year: 2026, subject: '微观经济学', chapter: '外部性和公共物品', point: '公共物品', count: 1 },
+            { year: 2026, subject: '微观经济学', chapter: '外部性和公共物品', point: '公共资源', count: 1 },
+            { year: 2026, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '索罗稳态', count: 3 },
+            { year: 2026, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '黄金率稳态', count: 1 },
+            { year: 2026, subject: '宏观经济学', chapter: '短期宏观经济问题', point: '自然失业率', count: 1 },
+            { year: 2026, subject: '宏观经济学', chapter: '短期宏观经济问题', point: '奥肯定律', count: 1 },
+            { year: 2026, subject: '宏观经济学', chapter: '短期宏观经济问题', point: '反失业', count: 1 },
+            { year: 2025, subject: '微观经济学', chapter: '消费者行为', point: '需求函数求解', count: 1 },
+            { year: 2025, subject: '微观经济学', chapter: '消费者行为', point: '消费者均衡', count: 1 },
+            { year: 2025, subject: '微观经济学', chapter: '消费者行为', point: '价格效应', count: 1 },
+            { year: 2025, subject: '微观经济学', chapter: '生产者行为', point: '厂商利润最大化', count: 1 },
+            { year: 2025, subject: '微观经济学', chapter: '要素市场', point: '厂商的要素使用原则', count: 1 },
+            { year: 2025, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '增长核算方程', count: 4 },
+            { year: 2025, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: '货币需求理论', count: 3 },
+            { year: 2025, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: '流动性陷阱', count: 1 },
+            { year: 2024, subject: '微观经济学', chapter: '消费者行为', point: '消费者均衡', count: 2 },
+            { year: 2024, subject: '微观经济学', chapter: '完全竞争者市场均衡与福利', point: '弹性理论', count: 1 },
+            { year: 2024, subject: '微观经济学', chapter: '完全竞争者市场均衡与福利', point: '消费者与生产者剩余', count: 1 },
+            { year: 2024, subject: '微观经济学', chapter: '完全竞争者市场均衡与福利', point: '无谓损失', count: 1 },
+            { year: 2024, subject: '微观经济学', chapter: '生产者行为', point: '规模报酬', count: 1 },
+            { year: 2024, subject: '微观经济学', chapter: '生产者行为', point: '厂商成本最小化', count: 1 },
+            { year: 2024, subject: '微观经济学', chapter: '生产者行为', point: '边际成本与平均成本', count: 1 },
+            { year: 2024, subject: '宏观经济学', chapter: '简单的凯恩斯主义', point: '均衡国民收入', count: 2 },
+            { year: 2024, subject: '宏观经济学', chapter: '简单的凯恩斯主义', point: '乘数理论', count: 2 },
+            { year: 2024, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '经济增长理论', count: 3 },
+            { year: 2023, subject: '微观经济学', chapter: '消费者行为', point: '消费者均衡', count: 1 },
+            { year: 2023, subject: '微观经济学', chapter: '完全竞争市场均衡与福利', point: '现金补贴对市场均衡的影响', count: 1 },
+            { year: 2023, subject: '微观经济学', chapter: '完全竞争市场均衡与福利', point: '实物补贴对市场均衡的影响', count: 1 },
+            { year: 2023, subject: '微观经济学', chapter: '完全竞争市场均衡与福利', point: '现金补贴与实物补贴的差异', count: 1 },
+            { year: 2023, subject: '微观经济学', chapter: '不完全竞争市场', point: '价格歧视', count: 2 },
+            { year: 2023, subject: '宏观经济学', chapter: '国民收入核算理论', point: 'GDP计算', count: 1 },
+            { year: 2023, subject: '宏观经济学', chapter: '国民收入核算理论', point: 'GDP平减指数计算', count: 1 },
+            { year: 2023, subject: '宏观经济学', chapter: '国民收入核算理论', point: 'CPI计算', count: 1 },
+            { year: 2023, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: 'LM曲线与货币政策效果', count: 3 },
+            { year: 2022, subject: '微观经济学', chapter: '完全竞争市场均衡与福利', point: '完全竞争市场均衡', count: 1 },
+            { year: 2022, subject: '微观经济学', chapter: '完全竞争市场均衡与福利', point: '税收对市场均衡的影响', count: 1 },
+            { year: 2022, subject: '微观经济学', chapter: '完全竞争市场均衡与福利', point: '无谓损失', count: 1 },
+            { year: 2022, subject: '微观经济学', chapter: '生产者行为', point: '生产扩展线', count: 1 },
+            { year: 2022, subject: '微观经济学', chapter: '生产者行为', point: '厂商成本最小化', count: 1 },
+            { year: 2022, subject: '微观经济学', chapter: '生产者行为', point: '最佳要素组合', count: 1 },
+            { year: 2022, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '均衡国民收入', count: 1 },
+            { year: 2022, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '非自愿存货', count: 1 },
+            { year: 2022, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '乘数理论', count: 1 },
+            { year: 2022, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '平衡预算乘数', count: 1 },
+            { year: 2022, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: 'LM方程与曲线', count: 3 },
+            { year: 2021, subject: '微观经济学', chapter: '完全竞争市场均衡与福利', point: '完全竞争市场均衡', count: 2 },
+            { year: 2021, subject: '微观经济学', chapter: '完全竞争市场均衡与福利', point: '技术进步对社会福利的影响', count: 2 },
+            { year: 2021, subject: '微观经济学', chapter: '完全竞争市场均衡与福利', point: '短期成本曲线', count: 3 },
+            { year: 2021, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '资本平均使用年限', count: 1 },
+            { year: 2021, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '索罗基本方程', count: 1 },
+            { year: 2021, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '索罗稳态', count: 1 },
+            { year: 2021, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '黄金率稳态', count: 1 },
+            { year: 2021, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '货币需求理论', count: 1 },
+            { year: 2021, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '流动性陷阱', count: 2 },
+            { year: 2020, subject: '微观经济学', chapter: '消费者行为', point: '价格效应', count: 3 },
+            { year: 2020, subject: '微观经济学', chapter: '完全竞争者市场均衡与福利', point: '消费者与生产者剩余', count: 1 },
+            { year: 2020, subject: '微观经济学', chapter: '完全竞争者市场均衡与福利', point: '征税对社会福利的影响', count: 1 },
+            { year: 2020, subject: '微观经济学', chapter: '完全竞争者市场均衡与福利', point: '补贴对社会福利的影响', count: 1 },
+            { year: 2020, subject: '宏观经济学', chapter: '国民收入核算理论', point: 'GDP计算', count: 2 },
+            { year: 2020, subject: '宏观经济学', chapter: '国民收入核算理论', point: 'GDP平减指数计算', count: 1 },
+            { year: 2020, subject: '宏观经济学', chapter: '国民收入核算理论', point: 'CPI计算', count: 1 },
+            { year: 2020, subject: '宏观经济学', chapter: '国民收入核算理论', point: '通货膨胀率计算', count: 1 },
+            { year: 2020, subject: '宏观经济学', chapter: '一般的凯恩斯主义模型', point: '短期供给变动对AD-AS模型的影响', count: 2 },
+            { year: 2019, subject: '微观经济学', chapter: '不完全竞争市场', point: '支付矩阵', count: 1 },
+            { year: 2019, subject: '微观经济学', chapter: '不完全竞争市场', point: '占有策略均衡', count: 1 },
+            { year: 2019, subject: '微观经济学', chapter: '不完全竞争市场', point: '纳什均衡', count: 1 },
+            { year: 2019, subject: '微观经济学', chapter: '外部性与公共物品', point: '外部性', count: 3 },
+            { year: 2019, subject: '微观经济学', chapter: '消费者行为', point: '消费者均衡', count: 2 },
+            { year: 2019, subject: '微观经济学', chapter: '消费者行为', point: '预算线', count: 1 },
+            { year: 2019, subject: '宏观经济学', chapter: '一般的凯恩斯主义模型', point: '财政政策对AD-AS模型的影响', count: 1 },
+            { year: 2019, subject: '宏观经济学', chapter: '一般的凯恩斯主义模型', point: '技术进步对AD-AS模型的影响', count: 1 },
+            { year: 2019, subject: '宏观经济学', chapter: '货币政策', point: '货币乘数', count: 2 },
+            { year: 2019, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '乘数理论', count: 2 },
+            { year: 2019, subject: '宏观经济学', chapter: '财政政策', point: '财政政策的时滞性', count: 1 },
+            { year: 2018, subject: '微观经济学', chapter: '完全竞争者市场均衡与福利', point: '弹性理论', count: 1 },
+            { year: 2018, subject: '微观经济学', chapter: '完全竞争者市场均衡与福利', point: '消费者与生产者剩余', count: 1 },
+            { year: 2018, subject: '微观经济学', chapter: '完全竞争者市场均衡与福利', point: '补贴对市场均衡的影响', count: 1 },
+            { year: 2018, subject: '微观经济学', chapter: '不完全竞争市场', point: '卡特尔模型', count: 1 },
+            { year: 2018, subject: '微观经济学', chapter: '不完全竞争市场', point: '古诺模型', count: 1 },
+            { year: 2018, subject: '微观经济学', chapter: '外部性与公共物品', point: '外部性', count: 2 },
+            { year: 2018, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: 'IS方程与曲线', count: 1 },
+            { year: 2018, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: 'LM方程与曲线', count: 1 },
+            { year: 2018, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: 'IS-LM均衡', count: 1 },
+            { year: 2018, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: '货币政策对IS-LM模型的影响', count: 1 },
+            { year: 2018, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '投资利率曲线', count: 2 },
+            { year: 2018, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '乘数理论', count: 3 },
+            { year: 2018, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '平衡预算乘数', count: 1 },
+            { year: 2017, subject: '微观经济学', chapter: '消费者行为', point: '无差异曲线', count: 1 },
+            { year: 2017, subject: '微观经济学', chapter: '完全竞争者市场均衡与福利', point: '弹性理论', count: 1 },
+            { year: 2017, subject: '微观经济学', chapter: '不完全竞争市场', point: '边际收益曲线', count: 1 },
+            { year: 2017, subject: '宏观经济学', chapter: '简单的凯恩斯主义模型', point: '持久收入消费理论', count: 1 },
+            { year: 2017, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '索罗稳态', count: 1 },
+            { year: 2017, subject: '宏观经济学', chapter: '一般的凯恩斯主义模型', point: '财政政策对AD-AS模型的影响', count: 1 },
+            { year: 2017, subject: '宏观经济学', chapter: '一般的凯恩斯主义模型', point: '技术进步对AD-AS模型的影响', count: 1 },
+            { year: 2016, subject: '微观经济学', chapter: '不完全竞争市场', point: '卡特尔模型', count: 1 },
+            { year: 2016, subject: '微观经济学', chapter: '不完全竞争市场', point: '古诺模型', count: 1 },
+            { year: 2016, subject: '微观经济学', chapter: '不完全竞争市场', point: '囚徒困境', count: 1 },
+            { year: 2016, subject: '宏观经济学', chapter: '一般的凯恩斯主义模型', point: '私人投资对经济的长短期影响', count: 2 },
+            { year: 2016, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '私人投资对经济的长期影响', count: 1 },
+            { year: 2016, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: '货币需求理论', count: 1 },
+            { year: 2016, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: '流动性陷阱', count: 1 },
+            { year: 2016, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '经济增长理论', count: 2 },
+            { year: 2015, subject: '微观经济学', chapter: '不完全竞争市场', point: '卡特尔模型', count: 1 },
+            { year: 2015, subject: '微观经济学', chapter: '不完全竞争市场', point: '古诺模型', count: 1 },
+            { year: 2015, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: 'IS方程与曲线', count: 1 },
+            { year: 2015, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: 'LM方程与曲线', count: 1 },
+            { year: 2015, subject: '宏观经济学', chapter: '扩大的凯恩斯主义模型', point: 'IS-LM均衡', count: 1 },
+            { year: 2015, subject: '宏观经济学', chapter: '一般的凯恩斯主义模型', point: '货币供给变动对AD-AS模型的影响', count: 1 },
+            { year: 2015, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '索罗剩余', count: 1 },
+            { year: 2015, subject: '宏观经济学', chapter: '长期宏观经济问题', point: '经济增长理论', count: 2 }
+        ];
+
+        // 应用状态
+        const state = {
+            filteredData: [...rawData],
+            selectedYears: ['all'],
+            selectedSubject: 'all',
+            selectedChapter: 'all'
+        };
+
+        // ECharts实例
+        let chartInstances = {};
+
+        // 初始化函数
+        function initApp() {
+            initFilters();
+            bindEvents();
+            updateAllCharts();
+        }
+
+        // 初始化筛选器
+        function initFilters() {
+            // 年份筛选器
+            const years = [...new Set(rawData.map(d => d.year))].sort((a, b) => b - a);
+            const yearSelect = document.getElementById('year-range');
+            
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+            
+            // 章节筛选器
+            const chapters = [...new Set(rawData.map(d => d.chapter))].sort();
+            const chapterSelect = document.getElementById('chapter-filter');
+            
+            chapters.forEach(chapter => {
+                const option = document.createElement('option');
+                option.value = chapter;
+                option.textContent = chapter;
+                chapterSelect.appendChild(option);
+            });
+        }
+
+        // 绑定事件
+        function bindEvents() {
+            document.getElementById('apply-filters').addEventListener('click', applyFilters);
+            document.getElementById('reset-filters').addEventListener('click', resetFilters);
+            
+            // 窗口大小变化时重绘图表
+            window.addEventListener('resize', () => {
+                Object.values(chartInstances).forEach(chart => {
+                    if (chart && chart.resize) chart.resize();
+                });
+            });
+        }
+
+        // 应用筛选
+        function applyFilters() {
+            const yearSelect = document.getElementById('year-range');
+            const subjectSelect = document.getElementById('subject-filter');
+            const chapterSelect = document.getElementById('chapter-filter');
+            
+            state.selectedYears = Array.from(yearSelect.selectedOptions).map(opt => opt.value);
+            state.selectedSubject = subjectSelect.value;
+            state.selectedChapter = chapterSelect.value;
+            
+            // 筛选数据
+            state.filteredData = rawData.filter(item => {
+                const yearMatch = state.selectedYears.includes('all') || 
+                                state.selectedYears.includes(item.year.toString());
+                const subjectMatch = state.selectedSubject === 'all' || 
+                                   item.subject === state.selectedSubject;
+                const chapterMatch = state.selectedChapter === 'all' || 
+                                   item.chapter === state.selectedChapter;
+                return yearMatch && subjectMatch && chapterMatch;
+            });
+            
+            updateAllCharts();
+        }
+
+        // 重置筛选
+        function resetFilters() {
+            document.getElementById('year-range').selectedIndex = 0;
+            document.getElementById('subject-filter').selectedIndex = 0;
+            document.getElementById('chapter-filter').selectedIndex = 0;
+            
+            state.selectedYears = ['all'];
+            state.selectedSubject = 'all';
+            state.selectedChapter = 'all';
+            state.filteredData = [...rawData];
+            
+            updateAllCharts();
+        }
+
+        // 更新所有图表
+        function updateAllCharts() {
+            updateStats();
+            createTrendChart();
+            createSubjectPieChart();
+            createRadarChart();
+            createTimeChapterHeatmap();
+            createStackedBarChart();
+            createWordCloudChart();
+            createBoxplotChart();
+            createSankeyChart();
+            createNetworkChart();
+            updateInsights();
+        }
+
+        // 1. 更新统计卡片
+        function updateStats() {
+            const data = state.filteredData;
+            
+            // 计算统计数据
+            const totalExams = data.reduce((sum, item) => sum + item.count, 0);
+            const totalPoints = data.length;
+            const yearsCovered = [...new Set(data.map(item => item.year))].length;
+            const avgPerYear = yearsCovered > 0 ? (totalExams / yearsCovered).toFixed(1) : 0;
+            
+            // 查找最高频知识点
+            const pointCounts = {};
+            data.forEach(item => {
+                pointCounts[item.point] = (pointCounts[item.point] || 0) + item.count;
+            });
+            
+            const topPoint = Object.entries(pointCounts)
+                .sort((a, b) => b[1] - a[1])[0] || ['无数据', 0];
+            
+            // 更新统计卡片
+            const statsContainer = document.getElementById('stats-container');
+            statsContainer.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-value">${totalExams}</div>
+                    <div class="stat-label">总考察次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔢</div>
+                    <div class="stat-value">${totalPoints}</div>
+                    <div class="stat-label">知识点数量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-value">${yearsCovered}</div>
+                    <div class="stat-label">覆盖年份</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value">${topPoint[1]}</div>
+                    <div class="stat-label">最高频知识点<br><small>${topPoint[0]}</small></div>
+                </div>
+            `;
+        }
+
+        // 2. 历年趋势分析
+        function createTrendChart() {
+            const data = state.filteredData;
+            const years = [...new Set(data.map(item => item.year))].sort((a, b) => a - b);
+            
+            // 按年份和学科聚合
+            const trendData = {
+                '微观经济学': [],
+                '宏观经济学': [],
+                '总计': []
+            };
+            
+            years.forEach(year => {
+                const yearData = data.filter(item => item.year === year);
+                const microCount = yearData
+                    .filter(item => item.subject === '微观经济学')
+                    .reduce((sum, item) => sum + item.count, 0);
+                const macroCount = yearData
+                    .filter(item => item.subject === '宏观经济学')
+                    .reduce((sum, item) => sum + item.count, 0);
+                
+                trendData['微观经济学'].push(microCount);
+                trendData['宏观经济学'].push(macroCount);
+                trendData['总计'].push(microCount + macroCount);
+            });
+            
+            const chart = echarts.init(document.getElementById('trend-chart'));
+            chartInstances.trend = chart;
+            
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        let result = `年份: ${years[params[0].dataIndex]}<br/>`;
+                        params.forEach(param => {
+                            result += `${param.marker} ${param.seriesName}: ${param.value}<br/>`;
+                        });
+                        return result;
+                    }
+                },
+                legend: {
+                    data: ['微观经济学', '宏观经济学', '总计'],
+                    top: 10
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    top: '20%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: years,
+                    axisLabel: {
+                        rotate: 45
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '考察次数'
+                },
+                series: [
+                    {
+                        name: '微观经济学',
+                        type: 'line',
+                        data: trendData['微观经济学'],
+                        smooth: true,
+                        lineStyle: {
+                            width: 3
+                        },
+                        itemStyle: {
+                            color: '#3498db'
+                        }
+                    },
+                    {
+                        name: '宏观经济学',
+                        type: 'line',
+                        data: trendData['宏观经济学'],
+                        smooth: true,
+                        lineStyle: {
+                            width: 3
+                        },
+                        itemStyle: {
+                            color: '#e74c3c'
+                        }
+                    },
+                    {
+                        name: '总计',
+                        type: 'line',
+                        data: trendData['总计'],
+                        smooth: true,
+                        lineStyle: {
+                            width: 3,
+                            type: 'dashed'
+                        },
+                        itemStyle: {
+                            color: '#2ecc71'
+                        }
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+        }
+
+        // 3. 学科占比分析
+        function createSubjectPieChart() {
+            const data = state.filteredData;
+            
+            // 按学科聚合
+            const subjectCount = {
+                '微观经济学': 0,
+                '宏观经济学': 0
+            };
+            
+            data.forEach(item => {
+                subjectCount[item.subject] += item.count;
+            });
+            
+            const pieData = Object.entries(subjectCount).map(([name, value]) => ({
+                name,
+                value
+            }));
+            
+            const chart = echarts.init(document.getElementById('subject-pie-chart'));
+            chartInstances.subjectPie = chart;
+            
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c}次 ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    right: 10,
+                    top: 'center'
+                },
+                series: [
+                    {
+                        name: '学科占比',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        center: ['35%', '50%'],
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderRadius: 10,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        },
+                        label: {
+                            show: false
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '16',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        data: pieData,
+                        color: ['#3498db', '#e74c3c']
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+        }
+
+        // 4. 章节对比雷达图
+        function createRadarChart() {
+            const data = state.filteredData;
+            const years = [...new Set(data.map(item => item.year))].sort((a, b) => a - b);
+            const chapters = [...new Set(data.map(item => item.chapter))];
+            
+            // 选择最近的3个年份进行比较
+            const recentYears = years.slice(-3);
+            
+            // 按年份和章节聚合数据
+            const radarData = recentYears.map(year => {
+                const yearData = data.filter(item => item.year === year);
+                const chapterValues = {};
+                
+                chapters.forEach(chapter => {
+                    const count = yearData
+                        .filter(item => item.chapter === chapter)
+                        .reduce((sum, item) => sum + item.count, 0);
+                    chapterValues[chapter] = count;
+                });
+                
+                return {
+                    name: year,
+                    value: Object.values(chapterValues)
+                };
+            });
+            
+            // 只显示考察次数最多的前8个章节
+            const chapterTotals = chapters.map(chapter => {
+                const total = data
+                    .filter(item => item.chapter === chapter)
+                    .reduce((sum, item) => sum + item.count, 0);
+                return { chapter, total };
+            }).sort((a, b) => b.total - a.total).slice(0, 8);
+            
+            const radarIndicator = chapterTotals.map(item => ({
+                name: item.chapter,
+                max: Math.max(...radarData.map(d => d.value[chapters.indexOf(item.chapter)])) + 2
+            }));
+            
+            // 更新radarData，只包含前8个章节
+            const filteredRadarData = radarData.map(yearData => ({
+                name: yearData.name,
+                value: chapterTotals.map(item => yearData.value[chapters.indexOf(item.chapter)])
+            }));
+            
+            const chart = echarts.init(document.getElementById('radar-chart'));
+            chartInstances.radar = chart;
+            
+            const option = {
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    data: recentYears,
+                    top: 10
+                },
+                radar: {
+                    indicator: radarIndicator,
+                    shape: 'circle',
+                    splitNumber: 5,
+                    axisName: {
+                        color: '#333',
+                        fontSize: 12
+                    }
+                },
+                series: [
+                    {
+                        name: '章节考察对比',
+                        type: 'radar',
+                        data: filteredRadarData,
+                        color: ['#3498db', '#e74c3c', '#2ecc71']
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+        }
+
+        // 5. 时间-章节热力图
+        function createTimeChapterHeatmap() {
+            const data = state.filteredData;
+            const years = [...new Set(data.map(item => item.year))].sort((a, b) => a - b);
+            const chapters = [...new Set(data.map(item => item.chapter))];
+            
+            // 创建热力图数据
+            const heatmapData = [];
+            const maxCounts = [];
+            
+            years.forEach((year, yIndex) => {
+                const yearData = data.filter(item => item.year === year);
+                const chapterValues = [];
+                
+                chapters.forEach((chapter, cIndex) => {
+                    const count = yearData
+                        .filter(item => item.chapter === chapter)
+                        .reduce((sum, item) => sum + item.count, 0);
+                    
+                    heatmapData.push([cIndex, yIndex, count]);
+                    chapterValues.push(count);
+                });
+                
+                maxCounts.push(Math.max(...chapterValues));
+            });
+            
+            const maxValue = Math.max(...maxCounts);
+            
+            const chart = echarts.init(document.getElementById('time-chapter-heatmap'));
+            chartInstances.timeHeatmap = chart;
+            
+            const option = {
+                tooltip: {
+                    position: 'top',
+                    formatter: function(params) {
+                        const chapter = chapters[params.data[0]];
+                        const year = years[params.data[1]];
+                        const count = params.data[2];
+                        return `${year}年<br/>${chapter}<br/>考察次数: ${count}`;
+                    }
+                },
+                grid: {
+                    left: '10%',
+                    right: '10%',
+                    bottom: '10%',
+                    top: '10%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: chapters,
+                    splitArea: {
+                        show: true
+                    },
+                    axisLabel: {
+                        rotate: 45,
+                        fontSize: 10
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: years,
+                    splitArea: {
+                        show: true
+                    }
+                },
+                visualMap: {
+                    min: 0,
+                    max: maxValue,
+                    calculable: true,
+                    orient: 'vertical',
+                    left: 'right',
+                    top: 'center',
+                    inRange: {
+                        color: ['#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695']
+                    }
+                },
+                series: [
+                    {
+                        name: '考察次数',
+                        type: 'heatmap',
+                        data: heatmapData,
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+        }
+
+        // 6. 堆积柱状图
+        function createStackedBarChart() {
+            const data = state.filteredData;
+            const years = [...new Set(data.map(item => item.year))].sort((a, b) => a - b);
+            const subjects = ['微观经济学', '宏观经济学'];
+            const chapters = [...new Set(data.map(item => item.chapter))];
+            
+            // 创建系列数据
+            const seriesData = subjects.map(subject => {
+                return {
+                    name: subject,
+                    type: 'bar',
+                    stack: 'total',
+                    data: years.map(year => {
+                        return data
+                            .filter(item => item.year === year && item.subject === subject)
+                            .reduce((sum, item) => sum + item.count, 0);
+                    })
+                };
+            });
+            
+            const chart = echarts.init(document.getElementById('stacked-bar-chart'));
+            chartInstances.stackedBar = chart;
+            
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: subjects,
+                    top: 10
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    top: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: years,
+                    axisLabel: {
+                        rotate: 45
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '考察次数'
+                },
+                series: seriesData,
+                color: ['#3498db', '#e74c3c']
+            };
+            
+            chart.setOption(option);
+        }
+
+        // 7. 高频知识点词云
+        function createWordCloudChart() {
+            const data = state.filteredData;
+            
+            // 聚合所有知识点的考察次数
+            const pointCounts = {};
+            data.forEach(item => {
+                pointCounts[item.point] = (pointCounts[item.point] || 0) + item.count;
+            });
+            
+            const wordData = Object.entries(pointCounts)
+                .map(([name, value]) => ({ 
+                    name, 
+                    value,
+                    textStyle: {
+                        color: value > 10 ? '#c0392b' : 
+                               value > 5 ? '#e74c3c' : 
+                               value > 2 ? '#3498db' : '#7f8c8d'
+                    }
+                }))
+                .sort((a, b) => b.value - a.value)
+                .slice(0, 50);
+            
+            const chart = echarts.init(document.getElementById('wordcloud-chart'));
+            chartInstances.wordcloud = chart;
+            
+            const option = {
+                tooltip: {
+                    show: true,
+                    formatter: function(params) {
+                        return `${params.name}<br/>考察次数: ${params.value}`;
+                    }
+                },
+                series: [{
+                    type: 'wordCloud',
+                    shape: 'circle',
+                    left: 'center',
+                    top: 'center',
+                    width: '90%',
+                    height: '90%',
+                    right: null,
+                    bottom: null,
+                    sizeRange: [12, 60],
+                    rotationRange: [-90, 90],
+                    rotationStep: 45,
+                    gridSize: 8,
+                    drawOutOfBound: false,
+                    textStyle: {
+                        fontFamily: 'sans-serif',
+                        fontWeight: 'bold',
+                        color: function () {
+                            return 'rgb(' + [
+                                Math.round(Math.random() * 160),
+                                Math.round(Math.random() * 160),
+                                Math.round(Math.random() * 160)
+                            ].join(',') + ')';
+                        }
+                    },
+                    emphasis: {
+                        textStyle: {
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    data: wordData
+                }]
+            };
+            
+            chart.setOption(option);
+        }
+
+        // 8. 箱线图
+        function createBoxplotChart() {
+            const data = state.filteredData;
+            const chapters = [...new Set(data.map(item => item.chapter))];
+            
+            // 为每个章节收集所有考察次数
+            const boxplotData = chapters.map(chapter => {
+                const counts = data
+                    .filter(item => item.chapter === chapter)
+                    .map(item => item.count);
+                
+                // 计算统计量：最小值、Q1、中位数、Q3、最大值
+                counts.sort((a, b) => a - b);
+                const min = counts[0] || 0;
+                const max = counts[counts.length - 1] || 0;
+                const median = counts[Math.floor(counts.length / 2)] || 0;
+                const q1 = counts[Math.floor(counts.length / 4)] || 0;
+                const q3 = counts[Math.floor(counts.length * 3 / 4)] || 0;
+                
+                return [min, q1, median, q3, max];
+            });
+            
+            // 只显示前10个章节
+            const topChapters = chapters.slice(0, 10);
+            const topBoxplotData = boxplotData.slice(0, 10);
+            
+            const chart = echarts.init(document.getElementById('boxplot-chart'));
+            chartInstances.boxplot = chart;
+            
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '10%',
+                    right: '10%',
+                    bottom: '15%',
+                    top: '10%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: topChapters,
+                    axisLabel: {
+                        rotate: 45
+                    },
+                    boundaryGap: true,
+                    nameGap: 30
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '考察次数',
+                    min: 0
+                },
+                series: [
+                    {
+                        name: '考察次数分布',
+                        type: 'boxplot',
+                        data: topBoxplotData,
+                        itemStyle: {
+                            color: '#3498db',
+                            borderColor: '#2980b9'
+                        }
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+        }
+
+        // 9. 桑基图
+        function createSankeyChart() {
+            const data = state.filteredData;
+            
+            // 按年份和章节创建节点
+            const years = [...new Set(data.map(item => item.year))].sort((a, b) => a - b);
+            const chapters = [...new Set(data.map(item => item.chapter))];
+            
+            const nodes = [];
+            const nodeMap = {};
+            
+            // 添加年份节点
+            years.forEach(year => {
+                const nodeId = `year-${year}`;
+                nodeMap[nodeId] = nodes.length;
+                nodes.push({
+                    name: `${year}年`,
+                    depth: 0
+                });
+            });
+            
+            // 添加章节节点
+            chapters.forEach(chapter => {
+                const nodeId = `chapter-${chapter}`;
+                nodeMap[nodeId] = nodes.length;
+                nodes.push({
+                    name: chapter,
+                    depth: 1
+                });
+            });
+            
+            // 创建链接
+            const links = [];
+            
+            years.forEach(year => {
+                const yearData = data.filter(item => item.year === year);
+                const yearNodeId = `year-${year}`;
+                
+                // 统计该年份各章节的考察次数
+                const chapterCounts = {};
+                chapters.forEach(chapter => {
+                    const count = yearData
+                        .filter(item => item.chapter === chapter)
+                        .reduce((sum, item) => sum + item.count, 0);
+                    if (count > 0) {
+                        chapterCounts[chapter] = count;
+                    }
+                });
+                
+                // 创建链接
+                Object.entries(chapterCounts).forEach(([chapter, count]) => {
+                    const chapterNodeId = `chapter-${chapter}`;
+                    links.push({
+                        source: nodeMap[yearNodeId],
+                        target: nodeMap[chapterNodeId],
+                        value: count,
+                        lineStyle: {
+                            color: year > 2020 ? '#3498db' : 
+                                   year > 2017 ? '#2ecc71' : '#9b59b6'
+                        }
+                    });
+                });
+            });
+            
+            const chart = echarts.init(document.getElementById('sankey-chart'));
+            chartInstances.sankey = chart;
+            
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function(params) {
+                        if (params.dataType === 'node') {
+                            return params.name;
+                        } else if (params.dataType === 'edge') {
+                            return `${params.data.sourceName} → ${params.data.targetName}<br/>考察次数: ${params.value}`;
+                        }
+                    }
+                },
+                series: {
+                    type: 'sankey',
+                    layout: 'none',
+                    data: nodes,
+                    links: links,
+                    emphasis: {
+                        focus: 'adjacency'
+                    },
+                    lineStyle: {
+                        color: 'source',
+                        curveness: 0.5
+                    },
+                    label: {
+                        fontSize: 10
+                    }
+                }
+            };
+            
+            chart.setOption(option);
+        }
+
+        // 10. 知识点关联网络图
+        function createNetworkChart() {
+            const data = state.filteredData;
+            
+            // 分析知识点之间的共现关系（同一年份内）
+            const years = [...new Set(data.map(item => item.year))];
+            const pointSet = new Set(data.map(item => item.point));
+            const nodes = Array.from(pointSet).map(name => ({ 
+                id: name, 
+                name,
+                symbolSize: 10,
+                itemStyle: {
+                    color: name.includes('函数') ? '#3498db' : 
+                           name.includes('均衡') ? '#2ecc71' : 
+                           name.includes('模型') ? '#9b59b6' : 
+                           name.includes('理论') ? '#e74c3c' : '#f39c12'
+                }
+            }));
+            
+            const links = [];
+            const cooccurrence = {};
+            
+            years.forEach(year => {
+                const yearPoints = data
+                    .filter(item => item.year === year)
+                    .map(item => item.point);
+                
+                // 计算共现次数
+                for (let i = 0; i < yearPoints.length; i++) {
+                    for (let j = i + 1; j < yearPoints.length; j++) {
+                        const key = [yearPoints[i], yearPoints[j]].sort().join('|');
+                        cooccurrence[key] = (cooccurrence[key] || 0) + 1;
+                    }
+                }
+            });
+            
+            // 创建链接
+            Object.entries(cooccurrence).forEach(([key, value]) => {
+                const [source, target] = key.split('|');
+                if (value >= 2) { // 只显示共现次数大于等于2的关系
+                    links.push({
+                        source,
+                        target,
+                        value,
+                        lineStyle: {
+                            width: value * 0.5,
+                            color: value >= 4 ? '#e74c3c' : 
+                                   value >= 3 ? '#3498db' : '#95a5a6'
+                        }
+                    });
+                }
+            });
+            
+            const chart = echarts.init(document.getElementById('network-chart'));
+            chartInstances.network = chart;
+            
+            const option = {
+                tooltip: {
+                    formatter: function(params) {
+                        if (params.dataType === 'node') {
+                            return params.data.name;
+                        } else if (params.dataType === 'edge') {
+                            return `${params.data.source} ↔ ${params.data.target}<br/>共现次数: ${params.data.value}`;
+                        }
+                    }
+                },
+                legend: {
+                    data: ['函数类', '均衡类', '模型类', '理论类', '其他'],
+                    top: 10
+                },
+                series: [
+                    {
+                        type: 'graph',
+                        layout: 'force',
+                        animation: true,
+                        label: {
+                            show: true,
+                            position: 'right',
+                            fontSize: 10
+                        },
+                        draggable: true,
+                        data: nodes,
+                        links: links,
+                        categories: [
+                            { name: '函数类' },
+                            { name: '均衡类' },
+                            { name: '模型类' },
+                            { name: '理论类' },
+                            { name: '其他' }
+                        ],
+                        roam: true,
+                        focusNodeAdjacency: true,
+                        itemStyle: {
+                            borderColor: '#fff',
+                            borderWidth: 1,
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.3)'
+                        },
+                        lineStyle: {
+                            color: 'source',
+                            curveness: 0.3
+                        },
+                        emphasis: {
+                            lineStyle: {
+                                width: 5
+                            }
+                        },
+                        force: {
+                            repulsion: 200,
+                            edgeLength: 50
+                        }
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+        }
+
+        // 更新分析洞察
+        function updateInsights() {
+            const data = state.filteredData;
+            
+            // 计算洞察数据
+            const totalExams = data.reduce((sum, item) => sum + item.count, 0);
+            const years = [...new Set(data.map(item => item.year))];
+            
+            // 按学科统计
+            const subjectCount = {
+                '微观经济学': 0,
+                '宏观经济学': 0
+            };
+            
+            data.forEach(item => {
+                subjectCount[item.subject] += item.count;
+            });
+            
+            // 按章节统计
+            const chapterCounts = {};
+            data.forEach(item => {
+                chapterCounts[item.chapter] = (chapterCounts[item.chapter] || 0) + item.count;
+            });
+            
+            const topChapters = Object.entries(chapterCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3);
+            
+            // 按知识点统计
+            const pointCounts = {};
+            data.forEach(item => {
+                pointCounts[item.point] = (pointCounts[item.point] || 0) + item.count;
+            });
+            
+            const topPoints = Object.entries(pointCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            // 趋势分析
+            const yearlyData = {};
+            years.sort((a, b) => a - b).forEach(year => {
+                yearlyData[year] = data
+                    .filter(item => item.year === year)
+                    .reduce((sum, item) => sum + item.count, 0);
+            });
+            
+            const yearValues = Object.values(yearlyData);
+            const trend = yearValues.length >= 2 ? 
+                (yearValues[yearValues.length - 1] - yearValues[0]) / yearValues[0] * 100 : 0;
+            
+            // 更新洞察列表
+            const insightList = document.getElementById('insight-list');
+            insightList.innerHTML = `
+                <li><strong>数据概况：</strong>共分析 ${years.length} 年数据，总计 ${totalExams} 次考察，覆盖 ${Object.keys(pointCounts).length} 个知识点</li>
+                <li><strong>学科分布：</strong>微观经济学占比 ${((subjectCount['微观经济学'] / totalExams) * 100).toFixed(1)}%，宏观经济学占比 ${((subjectCount['宏观经济学'] / totalExams) * 100).toFixed(1)}%</li>
+                <li><strong>重点章节：</strong>${topChapters.map(c => `${c[0]}(${c[1]}次)`).join('、')}</li>
+                <li><strong>高频知识点：</strong>${topPoints.map(p => `${p[0]}(${p[1]}次)`).join('、')}</li>
+                <li><strong>趋势变化：</strong>从${years[0]}年到${years[years.length-1]}年，考察次数${trend > 0 ? '增长' : '下降'}了${Math.abs(trend).toFixed(1)}%</li>
+                <li><strong>备考建议：</strong>重点关注${topChapters[0] ? topChapters[0][0] : ''}章节和${topPoints[0] ? topPoints[0][0] : ''}等高频知识点</li>
+            `;
+        }
+
+        // 切换图表类型
+        function toggleChartType(chartType) {
+            if (chartType === 'trend') {
+                const chart = chartInstances.trend;
+                const currentOption = chart.getOption();
+                const currentSeriesType = currentOption.series[0].type;
+                
+                const newType = currentSeriesType === 'line' ? 'bar' : 'line';
+                
+                currentOption.series.forEach(series => {
+                    series.type = newType;
+                });
+                
+                chart.setOption(currentOption);
+            }
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>

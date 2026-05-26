@@ -1,0 +1,113 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考录分析 - 叮咚802</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .main-container {
+            margin: 0;
+            padding: 0;
+        }
+        .analysis-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .analysis-title {
+            color: #004494; /* 西财蓝 */
+            border-bottom: 2px solid #ff0000; /* 红色下划线 */
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .analysis-content {
+            line-height: 1.6;
+        }
+        .file-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .file-icon {
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+        }
+        .file-link {
+            color: #004494; /* 西财蓝 */
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .file-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="main-header">
+            <div class="header-left">
+                <img src="avatar.jpg" alt="用户头像" class="header-avatar" id="headerAvatar">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="main.html" class="nav-item">首页</a></li>
+                    <li><a href="exam-situation-analysis.html" class="nav-item">考情分析</a></li>
+                    <li><a href="admission-analysis.html" class="nav-item active">考录分析</a></li>
+                    <li><a href="materials-summary.html" class="nav-item">资料汇总</a></li>
+                    <li><a href="knowledge-point-analysis.html" class="nav-item">考点分析</a></li>
+                    <li><a href="#" class="nav-item">课程视频</a></li>
+                    <li><a href="public-courses.html" class="nav-item">公共课</a></li>
+                    <li><a href="Quiz/quiz-app.html" class="nav-item">刷题中心</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main class="main-content">
+            <div class="analysis-container">
+                <h1 class="analysis-title">西财考研报考录取人数统计及分析</h1>
+                <div class="analysis-content">
+                    <ul class="file-list">
+                        <li class="file-item">
+                            <span class="file-icon">📁</span>
+                            <span class="file-link" onclick="window.location.href='admission-2025.html'">2025年西财考研报考录取人数统计及分析</span>
+                        </li>
+                        <li class="file-item">
+                            <span class="file-icon">📁</span>
+                            <span class="file-link" onclick="window.location.href='admission-2024.html'">2024年西财考研报考录取人数统计及分析</span>
+                        </li>
+                        <li class="file-item">
+                            <span class="file-icon">📁</span>
+                            <span class="file-link" onclick="window.location.href='admission-2023.html'">2023年西财考研报考录取人数统计及分析</span>
+                        </li>
+                        <li class="file-item">
+                            <span class="file-icon">📁</span>
+                            <span class="file-link" onclick="window.location.href='admission-2022.html'">2022年西财考研报考录取人数统计及分析</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

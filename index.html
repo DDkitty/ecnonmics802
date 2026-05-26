@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>叮咚802 - 登录</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-left">
+            <div class="avatar-container">
+                <img src="avatar.jpg" alt="卡通头像" class="avatar" id="avatar">
+            </div>
+            <div class="site-info">
+                <p class="site-title"><strong>叮咚猫 经济学801/802</strong></p>
+                <p class="site-description">本平台由本站管理员（Zephyr）专为西南财经大学经济学801/802专业考生设计并维护，旨在帮助考生系统掌握历年考情与核心学习资料，同时也能为其他经济学相关专业课提供有价值的补充与借鉴。目前网站处于测试阶段，期待每一位使用者能贡献您的修改建议，助力平台完善。</p>
+            </div>
+        </div>
+        <div class="login-right">
+            <div class="login-form">
+                <h2>用户登录</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="username">账号:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">密码:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="login-btn">登录</button>
+                    <p class="admin-note">账密请联系管理员添加</p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <!-- 自定义弹窗 -->
+    <div id="customAlert" class="custom-alert">
+        <div class="custom-alert-content">
+            <p id="alertMessage" class="custom-alert-message"></p>
+            <button id="alertClose" class="custom-alert-close">确定</button>
+        </div>
+    </div>
+</body>
+</html>

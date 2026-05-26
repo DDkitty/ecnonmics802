@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考情分析 - 叮咚802</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .analysis-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .analysis-title {
+            color: #004494; /* 西财蓝 */
+            border-bottom: 2px solid #ff0000; /* 红色下划线 */
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .analysis-content {
+            line-height: 1.6;
+        }
+        .file-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .file-icon {
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+        }
+        .file-link {
+            color: #004494; /* 西财蓝 */
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .file-link:hover {
+            text-decoration: underline;
+        }
+        .institution-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .institution-logo {
+            margin-right: 10px;
+            width: 48px;
+            height: 48px;
+        }
+        .institution-name {
+            color: #004494; /* 西财蓝 */
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .expandable-item {
+            position: relative;
+        }
+        .expand-icon {
+            margin-left: auto;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            color: #87CEFA; /* 浅蓝色 */
+        }
+        .expandable-item.expanded .expand-icon {
+            transform: rotate(90deg); /* 向下展开时旋转90度，从▶到▼ */
+        }
+        .sub-items {
+            display: none;
+            width: 100%;
+            margin-left: 60px;
+            margin-top: 10px;
+        }
+        .expandable-item.expanded .sub-items {
+            display: block;
+        }
+        .sub-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            font-size: 16px;
+            min-height: 96px; /* 减少到当前高度的80% (120px * 0.8 = 96px) */
+        }
+        .sub-item-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px; /* 减少与科目方框的间距 */
+        }
+        .exam-subjects {
+            display: flex;
+            gap: 8px;
+            margin-left: 90px; /* 与增大后的logo宽度+margin对齐 */
+            flex-wrap: wrap;
+            margin-top: -40px; /* 再向上移动15px，总共向上移动40px */
+        }
+        .subject-box {
+            /* 移除背景色 */
+            color: #FF0000;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            border: 1px solid #FFA500; /* 可选：添加橙色边框以保持视觉区分 */
+        }
+        .master-type {
+            color: #00FFFF;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            border: 1px solid #00FFFF;
+            /* 移除背景颜色填充 */
+            margin-left: 25px;
+        }
+        .sub-item .institution-logo {
+            width: 80px; /* 等比例放大，高度变为两倍 */
+            height: 80px;
+            margin-top: 30px; /* 向下移动30px */
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="main-header">
+            <div class="header-left">
+                <img src="avatar.jpg" alt="用户头像" class="header-avatar" id="headerAvatar">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="main.html" class="nav-item">首页</a></li>
+                    <li><a href="exam-situation-analysis.html" class="nav-item active">考情分析</a></li>
+                    <li><a href="admission-analysis.html" class="nav-item">考录分析</a></li>
+                    <li><a href="materials-summary.html" class="nav-item">资料汇总</a></li>
+                    <li><a href="knowledge-point-analysis.html" class="nav-item">考点分析</a></li>
+                    <li><a href="#" class="nav-item">课程视频</a></li>
+                    <li><a href="public-courses.html" class="nav-item">公共课</a></li>
+                    <li><a href="Quiz/quiz-app.html" class="nav-item">刷题中心</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <main class="main-content">
+            <div class="analysis-container">
+                <h1 class="analysis-title">西财考研考情分析</h1>
+                <div class="analysis-content">
+                    <ul class="file-list">
+                        <li class="institution-item expandable-item">
+                            <img src="Files/Photos/西财logo.png" alt="西财logo" class="institution-logo">
+                            <span class="institution-name">财政与税务学院</span>
+                            <span class="expand-icon">▶</span>
+                            <ul class="sub-items">
+                                <li class="sub-item">
+                                    <div class="sub-item-content">
+                                        <img src="Files/Photos/西财logo.png" alt="西财logo" class="institution-logo">
+                                        <span style="cursor: pointer; text-decoration: underline;" onclick="window.location.href='finance-taxation.html'">020203 财政学</span>
+                                        <span class="master-type">学硕</span>
+                                    </div>
+                                    <div class="exam-subjects">
+                                        <div class="subject-box">政治</div>
+                                        <div class="subject-box">英一</div>
+                                        <div class="subject-box">数三</div>
+                                        <div class="subject-box">802经济学</div>
+                                    </div>
+                                </li>
+                                <li class="sub-item">
+                                    <div class="sub-item-content">
+                                        <img src="Files/Photos/西财logo.png" alt="西财logo" class="institution-logo">
+                                        <span style="cursor: pointer; text-decoration: underline;" onclick="window.location.href='taxation.html'">0202Z6 税收学</span>
+                                        <span class="master-type">学硕</span>
+                                    </div>
+                                    <div class="exam-subjects">
+                                        <div class="subject-box">政治</div>
+                                        <div class="subject-box">英一</div>
+                                        <div class="subject-box">数三</div>
+                                        <div class="subject-box">802经济学</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="institution-item expandable-item">
+                            <img src="Files/Photos/西财logo.png" alt="西财logo" class="institution-logo">
+                            <span class="institution-name">金融学院</span>
+                            <span class="expand-icon">▶</span>
+                            <ul class="sub-items">
+                                <li class="sub-item">
+                                    <div class="sub-item-content">
+                                        <img src="Files/Photos/西财logo.png" alt="西财logo" class="institution-logo">
+                                        <span style="cursor: pointer; text-decoration: underline;" onclick="window.location.href='finance-jinyuan.html'">020204 金融学（金院）</span>
+                                        <span class="master-type">学硕</span>
+                                    </div>
+                                    <div class="exam-subjects">
+                                        <div class="subject-box">政治</div>
+                                        <div class="subject-box">英一</div>
+                                        <div class="subject-box">数三</div>
+                                        <div class="subject-box">802经济学</div>
+                                    </div>
+                                </li>
+                                <li class="sub-item">
+                                    <div class="sub-item-content">
+                                        <img src="Files/Photos/西财logo.png" alt="西财logo" class="institution-logo">
+                                        <span style="cursor: pointer; text-decoration: underline;" onclick="window.location.href='fintech.html'">0202J1 金融科技</span>
+                                        <span class="master-type">学硕</span>
+                                    </div>
+                                    <div class="exam-subjects">
+                                        <div class="subject-box">政治</div>
+                                        <div class="subject-box">英一</div>
+                                        <div class="subject-box">数三</div>
+                                        <div class="subject-box">802经济学</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- 可在此处添加更多考情分析内容 -->
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        // 展开/折叠功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const expandableItems = document.querySelectorAll('.expandable-item');
+            
+            expandableItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('expanded');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

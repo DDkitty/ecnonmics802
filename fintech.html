@@ -1,0 +1,2519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金融科技 - 叮咚802</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .finance-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        .finance-title {
+            color: #004494; /* 西财蓝 */
+            border-bottom: 2px solid #ff0000; /* 红色下划线 */
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .finance-content {
+            line-height: 1.6;
+        }
+        .finance-content h2 {
+            color: #004494;
+        }
+        .finance-content p {
+            margin-bottom: 5px;
+        }
+        
+        /* 新增内容区域的样式 */
+        .data-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        /* 导航栏样式 */
+        .data-nav {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .data-nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #FFF8DC; /* 默认填充颜色 */
+            transition: background-color 0.3s ease; /* 平滑过渡效果 */
+        }
+        
+        .data-nav ul.active {
+            background-color: #FFE4E1; /* 选中状态下的填充颜色 */
+        }
+        
+        .data-nav .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #333;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .data-nav .nav-item:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .data-nav .nav-item.active {
+            background-color: #ffffff;
+            color: #004494; /* 西财蓝 */
+            border-bottom: 3px solid #004494;
+            font-weight: bold;
+        }
+        
+        /* 正文内容区域样式 */
+        .data-content {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 2600px;
+            overflow-y: hidden;
+        }
+        
+        /* 确保.tab-content也能伸展 */
+        .tab-content {
+            display: none;
+            flex: 1;
+            width: 100%; /* 确保宽度为100% */
+            min-height: 100%; /* 最小高度为100% */
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+            flex: 1;
+            width: 100%; /* 确保宽度为100% */
+            min-height: 100%; /* 最小高度为100% */
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .data-content h2 {
+            color: #004494;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .data-content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .data-nav ul {
+                flex-direction: column;
+            }
+            
+            .data-nav .nav-item {
+                border-bottom: 1px solid #e0e0e0;
+                text-align: left;
+                padding-left: 20px;
+            }
+            
+            .data-nav .nav-item.active {
+                border-bottom: 1px solid #e0e0e0;
+                border-left: 3px solid #004494;
+            }
+            
+            .data-content {
+                padding: 20px;
+            }
+            
+            .breadcrumb {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+            
+            .breadcrumb li:not(:last-child)::after {
+                margin: 0 8px;
+            }
+        }
+        
+        /* 面包屑导航样式 */
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            font-size: 14px;
+        }
+        
+        .breadcrumb ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .breadcrumb li {
+            display: flex;
+            align-items: center;
+            color: #666;
+        }
+        
+        .breadcrumb li:not(:last-child)::after {
+            content: '>';
+            margin: 0 10px;
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .breadcrumb a {
+            color: #004494;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .breadcrumb a:hover {
+            color: #003366;
+            text-decoration: underline;
+        }
+        
+        .breadcrumb .current {
+            color: #333;
+            font-weight: 600;
+            cursor: default;
+        }
+        
+        /* 年份导航栏样式 */
+        .year-nav {
+            margin: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .year-nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            justify-content: space-around;
+            width: 100%;
+        }
+        
+        .year-nav .year-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #333;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            text-align: center;
+        }
+        
+        .year-nav .year-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .year-nav .year-item.active {
+            color: #004494; /* 西财蓝 */
+            border-bottom: 3px solid #004494;
+            font-weight: bold;
+        }
+        
+        /* 年份内容区域样式 */
+        .year-content {
+            display: none;
+        }
+        
+        .year-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* 表格容器样式 */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        /* 招生数据表格样式 */
+        .admission-table {
+            width: 100%; /* 表格宽度与div容器保持一致 */
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 14px;
+            text-align: center;
+            margin: 0 auto;
+        }
+        
+        .admission-table th,
+        .admission-table td {
+            padding: 15px 8px;
+            border: 1px solid #F5F5F5; /* 浅灰色边框 */
+            width: calc(100% / 6); /* 每个单元格宽度相等 */
+        }
+        
+        .admission-table tbody tr {
+            margin-bottom: 5px; /* 行间距 */
+            display: table-row;
+        }
+        
+        .admission-table th {
+            background-color: #f8f8f8;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .admission-table tr {
+            transition: background-color 0.2s ease;
+        }
+        
+        .admission-table tr:hover {
+            background-color: #fafafa;
+        }
+        
+        .admission-table td {
+             color: #555;
+         }
+
+        .admission-table tr.highlight-row td {
+            color: red !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="main-header">
+            <div class="header-left">
+                <img src="avatar.jpg" alt="用户头像" class="header-avatar" id="headerAvatar">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="main.html" class="nav-item">首页</a></li>
+                    <li><a href="exam-situation-analysis.html" class="nav-item active">考情分析</a></li>
+                    <li><a href="admission-analysis.html" class="nav-item">考录分析</a></li>
+                    <li><a href="materials-summary.html" class="nav-item">资料汇总</a></li>
+                    <li><a href="knowledge-point-analysis.html" class="nav-item">考点分析</a></li>
+                    <li><a href="#" class="nav-item">课程视频</a></li>
+                    <li><a href="public-courses.html" class="nav-item">公共课</a></li>
+                    <li><a href="Quiz/quiz-app.html" class="nav-item">刷题中心</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <main class="main-content">
+            <div class="finance-container">
+                <!-- 面包屑导航 -->
+                <div class="breadcrumb">
+                    <ul>
+                        <li><a href="main.html">首页</a></li>
+                        <li><a href="exam-situation-analysis.html">考情分析</a></li>
+                        <li class="current">金融科技</li>
+                    </ul>
+                </div>
+                
+                <h1 class="finance-title">0202J1 金融科技</h1>
+                <div class="finance-content">
+                    <p><strong>招生学院</strong>: 001金融学院</p>
+                    <p><strong>一级学科</strong>: 0202 应用经济学</p>
+                    <p><strong>专业名称</strong>: 金融科技</p>
+                    <p><strong>研究方向</strong>: 不区分研究方向</p>
+                    <p><strong>专业类型</strong>: 学硕(全日制)</p>
+                    <p><strong>专业学制</strong>: 三年</p>
+                    <p><strong>专业学费</strong>: 7200元/年</p>
+                    <p><strong>官方网址</strong>: <a href="https://jinrong.swufe.edu.cn/" target="_blank" style="color: #004494; text-decoration: underline; cursor: pointer;">金融学院</a></p>
+                    <p><strong>师资力量</strong>: <a href="https://jinrong.swufe.edu.cn/szdw/szdw2/jrx.htm" target="_blank" style="color: #004494; text-decoration: underline; cursor: pointer;">金融师资队伍</a></p>
+                    <p><strong>相关专业</strong>: <span style="cursor: pointer; text-decoration: underline;" onclick="window.location.href='finance-jinyuan.html'">020204 金融学（金院）</span></p>
+                </div>
+            </div>
+        </main>
+        
+        <!-- 新增的内容区域 -->
+        <div class="data-container">
+            <!-- 导航栏 -->
+            <div class="data-nav">
+                <ul>
+                    <li class="nav-item active" data-tab="enrollment">招生数据</li>
+                    <li class="nav-item" data-tab="application">报考人数</li>
+                    <li class="nav-item" data-tab="reexamination-score">复试分数</li>
+                    <li class="nav-item" data-tab="reexamination-list">复试名单</li>
+                    <li class="nav-item" data-tab="admission-list">录取名单</li>
+                </ul>
+            </div>
+            
+            <!-- 正文内容区域 -->
+            <div class="data-content">
+                <div class="tab-content active" id="enrollment">
+                    <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">历年招生数据详情</h3>
+                    <div class="table-container">
+                        <table class="admission-table">
+                            <thead>
+                                <tr>
+                                    <th>年份</th>
+                                    <th>报考人数</th>
+                                    <th>计划名额</th>
+                                    <th>统考名额</th>
+                                    <th>推免名额</th>
+                                    <th>复试分数</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2026</td>
+                                    <td>-</td>
+                                    <td>15</td>
+                                    <td>-</td>
+                                    <td>5</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>2025</td>
+                                    <td>57</td>
+                                    <td>15</td>
+                                    <td>6</td>
+                                    <td>10</td>
+                                    <td>341</td>
+                                </tr>
+                                <tr>
+                                    <td>2024</td>
+                                    <td>108</td>
+                                    <td>15</td>
+                                    <td>12</td>
+                                    <td>3</td>
+                                    <td>360</td>
+                                </tr>
+                                <tr>
+                                    <td>2023</td>
+                                    <td>99</td>
+                                    <td>17</td>
+                                    <td>13</td>
+                                    <td>4</td>
+                                    <td>346</td>
+                                </tr>
+                                <tr>
+                                    <td>2022</td>
+                                    <td>123</td>
+                                    <td>20</td>
+                                    <td>16</td>
+                                    <td>4</td>
+                                    <td>372</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 折线图区域 -->
+                    <div class="chart-container">
+                        <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">历年统考名额统计</h3>
+                        <canvas id="quotaChart"></canvas>
+                        <div style="text-align: center; font-size: 14px; color: #666; margin-top: 15px; padding: 10px; border-top: 1px dashed #ddd;">
+                            温馨提示：表格里面的统考名额包括'专项计划考生'。
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="application">
+                    <div class="chart-container">
+                        <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">历年报考人数</h3>
+                        <canvas id="applicationChart" width="1085" height="620" style="display: block; box-sizing: border-box; height: 400px; width: 700px;"></canvas>
+                    </div>
+                </div>
+                <div class="tab-content" id="reexamination-score">
+                    <div class="chart-container">
+                        <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">复试分数线与国家线</h3>
+                        <canvas id="reexaminationScoreChart"></canvas>
+                    </div>
+                </div>
+                <div class="tab-content" id="reexamination-list">
+                    <!-- 年份导航栏 -->
+                    <div class="year-nav">
+                        <ul>
+                            <li class="year-item active" data-year="2025">2025</li>
+                            <li class="year-item" data-year="2024">2024</li>
+                            <li class="year-item" data-year="2023">2023</li>
+                            <li class="year-item" data-year="2022">2022</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- 2025年复试名单 -->
+                    <div class="year-content active" id="year-2025">
+                        <div class="chart-container">
+                            <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">2025年普通一志愿复试名单（8人）</h3>
+                            <div class="admission-table-container">
+                                <table class="admission-table" style="display: none;">
+                                    <thead>
+                                        <tr>
+                                            <th>政治</th>
+                                            <th>外语</th>
+                                            <th>业务课一</th>
+                                            <th>业务课二</th>
+                                            <th>总分</th>
+                                            <th>排名</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>61</td><td>66</td><td>106</td><td>133</td><td>366</td><td>1</td></tr>
+                                        <tr class="highlight-row"><td>67</td><td>73</td><td>93</td><td>130</td><td>363</td><td>2</td></tr>
+                                        <tr><td>58</td><td>60</td><td>109</td><td>131</td><td>358</td><td>3</td></tr>
+                                        <tr><td>59</td><td>62</td><td>111</td><td>122</td><td>354</td><td>4</td></tr>
+                                        <tr><td>64</td><td>64</td><td>89</td><td>125</td><td>342</td><td>5</td></tr>
+                                        <tr class="highlight-row"><td>67</td><td>44</td><td>111</td><td>120</td><td>342</td><td>5</td></tr>
+                                        <tr><td>53</td><td>65</td><td>100</td><td>123</td><td>341</td><td>7</td></tr>
+                                        <tr><td>64</td><td>59</td><td>110</td><td>108</td><td>341</td><td>7</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style="color: #666; font-size: 14px; text-align: left; margin-top: 10px;">温馨提示：标红为未被录取</p >
+                            <!-- 专业课分数段分析条形图 -->
+                            <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2025年复试专业课分数段分析</h3>
+                            <div class="chart-container">
+                                <canvas id="professionalScoreChart" height="400" width="700"></canvas>
+                            </div>
+                            
+                            <!-- 2025年该专业复试名单成绩数据分析表格 -->
+                                                <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2025年该专业复试名单成绩数据分析</h3>
+                            <div class="admission-table-container">
+                                <table class="admission-table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>专业课代码</th>
+                                            <th>最低分</th>
+                                            <th>平均分</th>
+                                            <th>最高分</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>政治</td>
+                                            <td>53</td>
+                                            <td>61</td>
+                                            <td>67</td>
+                                        </tr>
+                                        <tr>
+                                            <td>外语</td>
+                                            <td>44</td>
+                                            <td>61</td>
+                                            <td>73</td>
+                                        </tr>
+                                        <tr>
+                                            <td>业务课一</td>
+                                            <td>89</td>
+                                            <td>103</td>
+                                            <td>111</td>
+                                        </tr>
+                                        <tr>
+                                            <td>业务课二</td>
+                                            <td>108</td>
+                                            <td>124</td>
+                                            <td>133</td>
+                                        </tr>
+                                        <tr>
+                                            <td>总分</td>
+                                            <td>341</td>
+                                            <td>350</td>
+                                            <td>366</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- 2025年全校复试名单成绩数据分析表格后的多余p元素 -->
+                             <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2025年全校复试名单成绩数据分析</h3>
+                            <div class="admission-table-container">
+                                <table class="admission-table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>专业课代码</th>
+                                            <th>最低分</th>
+                                            <th>平均分</th>
+                                            <th>最高分</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>101思想政治理论</td>
+                                            <td>46</td>
+                                            <td>63</td>
+                                            <td>80</td>
+                                        </tr>
+                                        <tr>
+                                            <td>201英语（一）</td>
+                                            <td>39</td>
+                                            <td>63</td>
+                                            <td>82</td>
+                                        </tr>
+                                        <tr>
+                                            <td>303数学（三）</td>
+                                            <td>63</td>
+                                            <td>111</td>
+                                            <td>143</td>
+                                        </tr>
+                                        <tr>
+                                            <td>802经济学</td>
+                                            <td>100</td>
+                                            <td>127</td>
+                                            <td>147</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- 这里可以添加表格或其他内容 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 2024年复试名单 -->
+                    <div class="year-content" id="year-2024">
+                        <div class="chart-container">
+                            <h3 style="font-size: 16px; text-align: center; margin: 20px 0;">2024年普通一志愿复试名单（16人）</h3>
+                            <div class="admission-table-container">
+                                <table class="admission-table" style="display: none;">
+                                    <thead>
+                                        <tr>
+                                            <th>政治</th>
+                                            <th>外语</th>
+                                            <th>业务课一</th>
+                                            <th>业务课二</th>
+                                            <th>总分</th>
+                                            <th>排名</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>81</td><td>87</td><td>107</td><td>136</td><td>411</td><td>1</td></tr>
+                                        <tr class="highlight-row"><td>77</td><td>79</td><td>122</td><td>116</td><td>394</td><td>2</td></tr>
+                                        <tr class="highlight-row"><td>76</td><td>64</td><td>122</td><td>129</td><td>391</td><td>3</td></tr>
+                                        <tr><td>72</td><td>77</td><td>117</td><td>124</td><td>390</td><td>4</td></tr>
+                                        <tr class="highlight-row"><td>71</td><td>80</td><td>112</td><td>118</td><td>381</td><td>5</td></tr>
+                                        <tr><td>77</td><td>73</td><td>106</td><td>119</td><td>375</td><td>6</td></tr>
+                                        <tr><td>72</td><td>85</td><td>110</td><td>108</td><td>375</td><td>6</td></tr>
+                                        <tr><td>70</td><td>70</td><td>117</td><td>116</td><td>373</td><td>8</td></tr>
+                                        <tr><td>60</td><td>82</td><td>114</td><td>114</td><td>370</td><td>9</td></tr>
+                                        <tr><td>64</td><td>82</td><td>108</td><td>114</td><td>368</td><td>10</td></tr>
+                                        <tr><td>79</td><td>81</td><td>98</td><td>110</td><td>368</td><td>10</td></tr>
+                                        <tr><td>72</td><td>73</td><td>106</td><td>115</td><td>366</td><td>12</td></tr>
+                                        <tr class="highlight-row"><td>75</td><td>87</td><td>102</td><td>101</td><td>365</td><td>13</td></tr>
+                                        <tr><td>71</td><td>74</td><td>120</td><td>100</td><td>365</td><td>13</td></tr>
+                                        <tr><td>67</td><td>80</td><td>106</td><td>108</td><td>361</td><td>15</td></tr>
+                                        <tr><td>74</td><td>64</td><td>105</td><td>118</td><td>361</td><td>15</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style="color: #666; font-size: 14px; text-align: left; margin-top: 10px;">温馨提示：标红为未被录取</p >
+                            
+                            <!-- 分数段分布分析条形图 -->
+                            <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2024年复试专业课分数段分析</h3>
+                            <div class="chart-container">
+                                <canvas id="scoreDistributionChart" height="400" width="700"></canvas>
+                            </div>
+                            <!-- 2024年该专业复试名单成绩数据分析表格 -->
+                            <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2024年该专业复试名单成绩数据分析</h3>
+                            <div class="admission-table-container">
+                                <table class="admission-table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>专业课代码</th>
+                                            <th>最低分</th>
+                                            <th>平均分</th>
+                                            <th>最高分</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>政治</td>
+                                            <td>60</td>
+                                            <td>72</td>
+                                            <td>81</td>
+                                        </tr>
+                                        <tr>
+                                            <td>外语</td>
+                                            <td>64</td>
+                                            <td>77</td>
+                                            <td>87</td>
+                                        </tr>
+                                        <tr>
+                                            <td>业务课一</td>
+                                            <td>98</td>
+                                            <td>110</td>
+                                            <td>122</td>
+                                        </tr>
+                                        <tr>
+                                            <td>业务课二</td>
+                                            <td>100</td>
+                                            <td>115</td>
+                                            <td>136</td>
+                                        </tr>
+                                        <tr>
+                                            <td>总分</td>
+                                            <td>361</td>
+                                            <td>375</td>
+                                            <td>411</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                             <!-- 2024年该专业复试名单成绩数据分析表格 -->
+                            <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2024年全校复试名单成绩数据分析</h3>
+                            <div class="admission-table-container">
+                                <table class="admission-table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>专业课代码</th>
+                                            <th>最低分</th>
+                                            <th>平均分</th>
+                                            <th>最高分</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>101思想政治理论</td>
+                                            <td>55</td>
+                                            <td>72</td>
+                                            <td>85</td>
+                                        </tr>
+                                        <tr>
+                                            <td>201英语（一）</td>
+                                            <td>50</td>
+                                            <td>75</td>
+                                            <td>91</td>
+                                        </tr>
+                                        <tr>
+                                            <td>303数学（三）</td>
+                                            <td>79</td>
+                                            <td>115</td>
+                                            <td>147</td>
+                                        </tr>
+                                        <tr>
+                                            <td>802经济学</td>
+                                            <td>88</td>
+                                            <td>116</td>
+                                            <td>136</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- 这里可以添加表格或其他内容 -->
+                        </div>
+                    </div>
+                    <!-- 2023年复试名单 -->
+                    <div class="year-content" id="year-2023">
+                        <div class="chart-container">
+                            <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2023年普通一志愿复试名单（16人）</h3>
+                            <div class="admission-table-container">
+                                <table class="admission-table">
+                                    <thead>
+                                        <tr>
+                                            <th>政治</th>
+                                            <th>外语</th>
+                                            <th>业务课一</th>
+                                            <th>业务课二</th>
+                                            <th>总分</th>
+                                            <th>排名</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>71</td><td>71</td><td>148</td><td>131</td><td>421</td><td>1</td></tr>
+                                        <tr><td>71</td><td>77</td><td>117</td><td>134</td><td>399</td><td>2</td></tr>
+                                        <tr><td>64</td><td>70</td><td>133</td><td>130</td><td>397</td><td>3</td></tr>
+                                        <tr><td>72</td><td>84</td><td>116</td><td>116</td><td>388</td><td>4</td></tr>
+                                        <tr><td>65</td><td>73</td><td>127</td><td>123</td><td>388</td><td>4</td></tr>
+                                        <tr><td>67</td><td>68</td><td>117</td><td>108</td><td>360</td><td>6</td></tr>
+                                        <tr class="highlight-row"><td>70</td><td>72</td><td>117</td><td>100</td><td>359</td><td>7</td></tr>
+                                        <tr><td>67</td><td>70</td><td>92</td><td>129</td><td>358</td><td>8</td></tr>
+                                        <tr class="highlight-row"><td>65</td><td>74</td><td>95</td><td>123</td><td>357</td><td>9</td></tr>
+                                        <tr><td>58</td><td>69</td><td>99</td><td>131</td><td>357</td><td>9</td></tr>
+                                        <tr><td>63</td><td>65</td><td>106</td><td>122</td><td>356</td><td>11</td></tr>
+                                        <tr><td>62</td><td>68</td><td>109</td><td>117</td><td>356</td><td>11</td></tr>
+                                        <tr><td>74</td><td>71</td><td>100</td><td>111</td><td>356</td><td>11</td></tr>
+                                        <tr class="highlight-row"><td>71</td><td>71</td><td>92</td><td>121</td><td>355</td><td>14</td></tr>
+                                        <tr><td>70</td><td>70</td><td>109</td><td>101</td><td>350</td><td>15</td></tr>
+                                        <tr><td>63</td><td>55</td><td>104</td><td>125</td><td>347</td><td>16</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style="color: #666; font-size: 14px; text-align: left; margin-top: 10px;">温馨提示：标红为未被录取。</p >
+                            <!--2023年折线图-->
+                            <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2023年复试专业课分数段分析</h3>
+                            <div class="chart-container">
+                                <canvas id="scoreDistributionChart2023" height="400" width="700"></canvas>
+                            </div>
+                                                     <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2023年该专业复试名单成绩数据分析</h3>
+                            <div class="admission-table-container">
+                                <table class="admission-table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>专业课代码</th>
+                                            <th>最低分</th>
+                                            <th>平均分</th>
+                                            <th>最高分</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>政治</td>
+                                            <td>58</td>
+                                            <td>67</td>
+                                            <td>74</td>
+                                        </tr>
+                                        <tr>
+                                            <td>外语</td>
+                                            <td>55</td>
+                                            <td>70</td>
+                                            <td>84</td>
+                                        </tr>
+                                        <tr>
+                                            <td>业务课一</td>
+                                            <td>92</td>
+                                            <td>111</td>
+                                            <td>148</td>
+                                        </tr>
+                                        <tr>
+                                            <td>业务课二</td>
+                                            <td>100</td>
+                                            <td>120</td>
+                                            <td>134</td>
+                                        </tr>
+                                        <tr>
+                                            <td>总分</td>
+                                            <td>347</td>
+                                            <td>369</td>
+                                            <td>421</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 2022年复试名单 -->
+                    <div class="year-content" id="year-2022">
+                        <div class="chart-container">
+                            <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2022年普通一志愿复试名单（20人）</h3>
+                            <div class="admission-table-container">
+                                <table class="admission-table">
+                                    <thead>
+                                        <tr>
+                                            <th>政治</th>
+                                            <th>外语</th>
+                                            <th>业务课一</th>
+                                            <th>业务课二</th>
+                                            <th>总分</th>
+                                            <th>排名</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>74</td><td>78</td><td>136</td><td>136</td><td>424</td><td>1</td></tr>
+                                        <tr><td>76</td><td>72</td><td>127</td><td>142</td><td>417</td><td>2</td></tr>
+                                        <tr><td>73</td><td>77</td><td>129</td><td>130</td><td>409</td><td>3</td></tr>
+                                        <tr><td>63</td><td>77</td><td>128</td><td>135</td><td>403</td><td>4</td></tr>
+                                        <tr><td>73</td><td>68</td><td>127</td><td>135</td><td>403</td><td>4</td></tr>
+                                        <tr><td>73</td><td>65</td><td>118</td><td>133</td><td>389</td><td>6</td></tr>
+                                        <tr><td>64</td><td>76</td><td>129</td><td>119</td><td>388</td><td>7</td></tr>
+                                        <tr><td>68</td><td>77</td><td>131</td><td>111</td><td>387</td><td>8</td></tr>
+                                        <tr><td>71</td><td>72</td><td>105</td><td>137</td><td>385</td><td>9</td></tr>
+                                        <tr><td>69</td><td>79</td><td>107</td><td>128</td><td>383</td><td>10</td></tr>
+                                        <tr><td>73</td><td>63</td><td>108</td><td>137</td><td>381</td><td>11</td></tr>
+                                        <tr><td>64</td><td>76</td><td>110</td><td>129</td><td>379</td><td>12</td></tr>
+                                        <tr><td>69</td><td>70</td><td>117</td><td>122</td><td>378</td><td>13</td></tr>
+                                        <tr><td>60</td><td>81</td><td>101</td><td>135</td><td>377</td><td>14</td></tr>
+                                        <tr><td>74</td><td>77</td><td>113</td><td>112</td><td>376</td><td>15</td></tr>
+                                        <tr><td>65</td><td>76</td><td>110</td><td>125</td><td>376</td><td>15</td></tr>
+                                        <tr><td>73</td><td>75</td><td>97</td><td>130</td><td>375</td><td>17</td></tr>
+                                        <tr><td>68</td><td>66</td><td>119</td><td>119</td><td>372</td><td>18</td></tr>
+                                        <tr><td>70</td><td>70</td><td>104</td><td>128</td><td>372</td><td>18</td></tr>
+                                        <tr><td>67</td><td>60</td><td>123</td><td>122</td><td>372</td><td>18</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--2023年折线图-->
+
+                            <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2022年复试专业课分数段分析</h3>
+                            <div class="chart-container">
+                                <canvas id="scoreDistributionChart2022" height="400" width="700"></canvas>
+                            </div>
+                            <h3 style="font-size: 16px; text-align: center; margin: 40px 0 20px 0; color: #6495ED;">2022年该专业复试名单成绩数据分析</h3>
+                            <div class="admission-table-container">
+                                <table class="admission-table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>专业课代码</th>
+                                            <th>最低分</th>
+                                            <th>平均分</th>
+                                            <th>最高分</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>政治</td>
+                                            <td>60</td>
+                                            <td>69</td>
+                                            <td>76</td>
+                                        </tr>
+                                        <tr>
+                                            <td>外语</td>
+                                            <td>60</td>
+                                            <td>72</td>
+                                            <td>81</td>
+                                        </tr>
+                                        <tr>
+                                            <td>业务课一</td>
+                                            <td>97</td>
+                                            <td>116</td>
+                                            <td>136</td>
+                                        </tr>
+                                        <tr>
+                                            <td>业务课二</td>
+                                            <td>111</td>
+                                            <td>128</td>
+                                            <td>142</td>
+                                        </tr>
+                                        <tr>
+                                            <td>总分</td>
+                                            <td>372</td>
+                                            <td>387</td>
+                                            <td>424</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- 这里可以添加表格或其他内容 -->
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="admission-list">
+                    <!-- 年份导航栏 -->
+                    <div class="year-nav">
+                        <ul>
+                            <li class="year-item active" data-year="2025">2025</li>
+                            <li class="year-item" data-year="2024">2024</li>
+                            <li class="year-item" data-year="2023">2023</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- 2025年录取名单 -->
+                    <div class="year-content active" id="admission-year-2025">
+                        <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">2025年普通一志愿录取名单（6/8）</h3>
+                        <div class="table-container">
+                            <table class="admission-table">
+                                <thead>
+                                    <tr>
+                                        <th>初试成绩</th>
+                                        <th>复试成绩</th>
+                                        <th>总成绩</th>
+                                        <th>排名</th>
+                                        <th>名次变动</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>366</td>
+                                        <td>90.90</td>
+                                        <td>78.51</td>
+                                        <td>1</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>354</td>
+                                        <td>87.50</td>
+                                        <td>75.81</td>
+                                        <td>2</td>
+                                        <td style="color: #DC143C;">+2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>358</td>
+                                        <td>84.55</td>
+                                        <td>75.49</td>
+                                        <td>3</td>
+                                        <td style="color: #DC143C;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>341</td>
+                                        <td>87.85</td>
+                                        <td>74.10</td>
+                                        <td>4</td>
+                                        <td style="color: #DC143C;">+3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>342</td>
+                                        <td>83.20</td>
+                                        <td>72.84</td>
+                                        <td>5</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>341</td>
+                                        <td>78.05</td>
+                                        <td>71.16</td>
+                                        <td>6</td>
+                                        <td>+1</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #228B22;">363</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #228B22;">342</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                         <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">2025年普通一志愿初试成绩区间分析</h3>
+                        <div class="table-container">
+                            <table class="admission-table">
+                                <thead>
+                                    <tr>
+                                        <th>初试成绩所属区间</th>
+                                        <th>总人数</th>
+                                        <th>被刷人数</th>
+                                        <th>录取人数</th>
+                                        <th>录取率</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>360-369</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>50%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>350-359</td>
+                                        <td>2</td>
+                                        <td>0</td>
+                                        <td>2</td>
+                                        <td>10%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>340-349</td>
+                                        <td>4</td>
+                                        <td>1</td>
+                                        <td>3</td>
+                                        <td>75%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">2025年普通一志愿数据分析</h3>
+                        <div class="table-container">
+                            <table class="admission-table">
+                                <thead>
+                                    <tr>
+                                        <th>指标</th>
+                                        <th>数据</th>
+                                        <th>指标</th>
+                                        <th>数据</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>录取一志愿人数</td>
+                                        <td>6</td>
+                                        <td>一志愿录取率</td>
+                                        <td>75%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>淘汰一志愿人数</td>
+                                        <td>2</td>
+                                        <td>一志愿淘汰率</td>
+                                        <td>25%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>进复试最高分</td>
+                                        <td>366</td>
+                                        <td>录取最高分</td>
+                                        <td>366</td>
+                                    </tr>
+                                    <tr>
+                                        <td>进复试平均分</td>
+                                        <td>350</td>
+                                        <td>录取平均分</td>
+                                        <td>350</td>
+                                    </tr>
+                                    <tr>
+                                        <td>录取最低分</td>
+                                        <td>341</td>
+                                        <td>录取最低分</td>
+                                        <td>341</td>
+                                    </tr>
+                                    <tr>
+                                        <td>被刷平均分</td>
+                                        <td>352</td>
+                                        <td>被刷最高分</td>
+                                        <td>363</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 2024年录取名单 -->
+                    <div class="year-content" id="admission-year-2024">
+                        <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">2024年普通一志愿录取名单（12/16）</h3>
+                        <div class="table-container">
+                            <table class="admission-table">
+                                <thead>
+                                    <tr>
+                                        <th>初试成绩</th>
+                                        <th>复试成绩</th>
+                                        <th>总成绩</th>
+                                        <th>排名</th>
+                                        <th>名次变动</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>411</td>
+                                        <td>74.00</td>
+                                        <td>79.74</td>
+                                        <td>1</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>365</td>
+                                        <td>79.45</td>
+                                        <td>74.94</td>
+                                        <td>2</td>
+                                        <td style="color: #DC143C;">+11</td>
+                                    </tr>
+                                    <tr>
+                                        <td>368</td>
+                                        <td>74.45</td>
+                                        <td>73.86</td>
+                                        <td>3</td>
+                                        <td style="color: #DC143C;">+7</td>
+                                    </tr>
+                                    <tr>
+                                        <td>390</td>
+                                        <td>63.55</td>
+                                        <td>73.67</td>
+                                        <td>4</td>
+                                        <td style="color: #228B22;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>370</td>
+                                        <td>71.20</td>
+                                        <td>73.16</td>
+                                        <td>5</td>
+                                        <td style="color: #DC143C;">+4</td>
+                                    </tr>
+                                    <tr>
+                                        <td>373</td>
+                                        <td>69.20</td>
+                                        <td>72.98</td>
+                                        <td>6</td>
+                                        <td style="color:  #DC143C;">+2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>368</td>
+                                        <td>70.90</td>
+                                        <td>72.79</td>
+                                        <td>7</td>
+                                        <td style="color: #DC143C;">+3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>366</td>
+                                        <td>71.65</td>
+                                        <td>72.74</td>
+                                        <td>8</td>
+                                        <td style="color: #DC143C;">+4</td>
+                                    </tr>
+                                    <tr>
+                                        <td>375</td>
+                                        <td>67.00</td>
+                                        <td>72.60</td>
+                                        <td>9</td>
+                                        <td style="color:#228B22;">-3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>375</td>
+                                        <td>64.30</td>
+                                        <td>71.79</td>
+                                        <td>10</td>
+                                        <td style="color:#228B22;">-4</td>
+                                    </tr>
+                                    <tr>
+                                        <td>361</td>
+                                        <td>67.80</td>
+                                        <td>70.88</td>
+                                        <td>11</td>
+                                        <td style="color: #DC143C;">+4</td>
+                                    </tr>
+                                    <tr>
+                                        <td>361</td>
+                                        <td>66.35</td>
+                                        <td>70.45</td>
+                                        <td>12</td>
+                                        <td style="color: #DC143C;">+3</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color:#228B22;">394</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color:#228B22;">391</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                    </tr>
+                                    <tr>
+                                        <td style="color:#228B22;">381</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                    </tr>
+                                    <tr>
+                                        <td style="color:#228B22;">365</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">2024年普通一志愿初试成绩区间分析</h3>
+                        <div class="table-container">
+                            <table class="admission-table">
+                                <thead>
+                                    <tr>
+                                        <th>初试成绩所属区间</th>
+                                        <th>总人数</th>
+                                        <th>被刷人数</th>
+                                        <th>录取人数</th>
+                                        <th>录取率</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>410-419</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>100%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>390-399</td>
+                                        <td>3</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                        <td>33.33%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>380-389</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>370-379</td>
+                                        <td>4</td>
+                                        <td>0</td>
+                                        <td>4</td>
+                                        <td>100%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>360-369</td>
+                                        <td>7</td>
+                                        <td>1</td>
+                                        <td>6</td>
+                                        <td>85.71%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">2024年普通一志愿数据分析</h3>
+                        <div class="table-container">
+                            <table class="admission-table">
+                                <thead>
+                                    <tr>
+                                        <th>指标</th>
+                                        <th>数据</th>
+                                        <th>指标</th>
+                                        <th>数据</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>录取一志愿人数</td>
+                                        <td>12</td>
+                                        <td>一志愿录取率</td>
+                                        <td>75.0%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>淘汰一志愿人数</td>
+                                        <td>4</td>
+                                        <td>一志愿淘汰率</td>
+                                        <td>25%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>进复试最高分</td>
+                                        <td>411</td>
+                                        <td>录取最高分</td>
+                                        <td>411</td>
+                                    </tr>
+                                    <tr>
+                                        <td>进复试平均分</td>
+                                        <td>375</td>
+                                        <td>录取平均分</td>
+                                        <td>373</td>
+                                    </tr>
+                                    <tr>
+                                        <td>录取最低分</td>
+                                        <td>361</td>
+                                        <td>录取最低分</td>
+                                        <td>361</td>
+                                    </tr>
+                                    <tr>
+                                        <td>被刷平均分</td>
+                                        <td>382</td>
+                                        <td>被刷最高分</td>
+                                        <td>394</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 2023年录取名单 -->
+                    <div class="year-content" id="admission-year-2023">
+                        <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">2023年普通一志愿录取名单（13/16）</h3>
+                        <div class="table-container">
+                            <table class="admission-table">
+                                <thead>
+                                    <tr>
+                                        <th>初试成绩</th>
+                                        <th>复试成绩</th>
+                                        <th>总成绩</th>
+                                        <th>排名</th>
+                                        <th>名次变动</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>421</td>
+                                        <td>79.05</td>
+                                        <td>82.66</td>
+                                        <td>1</td>
+                                        <td style="color: #228B22;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>388</td>
+                                        <td>80.70</td>
+                                        <td>78.53</td>
+                                        <td>2</td>
+                                        <td style="color: #DC143C;">+2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>388</td>
+                                        <td>79.95</td>
+                                        <td>78.31</td>
+                                        <td>3</td>
+                                        <td style="color: #DC143C;">+1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>399</td>
+                                        <td>72.05</td>
+                                        <td>77.48</td>
+                                        <td>4</td>
+                                        <td style="color: #228B22;">-2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>397</td>
+                                        <td>72.35</td>
+                                        <td>77.29</td>
+                                        <td>5</td>
+                                        <td style="color: #228B22;">-2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>358</td>
+                                        <td>82.95</td>
+                                        <td>75.01</td>
+                                        <td>6</td>
+                                        <td style="color: #DC143C;">+2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>357</td>
+                                        <td>81.90</td>
+                                        <td>74.55</td>
+                                        <td>7</td>
+                                        <td style="color: #DC143C;">+2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>356</td>
+                                        <td>79.95</td>
+                                        <td>73.83</td>
+                                        <td>8</td>
+                                        <td style="color: #DC143C;">+3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>356</td>
+                                        <td>78.25</td>
+                                        <td>73.32</td>
+                                        <td>9</td>
+                                        <td style="color: #DC143C;">+2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>356</td>
+                                        <td>77.75</td>
+                                        <td>73.17</td>
+                                        <td>10</td>
+                                        <td style="color: #DC143C;">+1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>350</td>
+                                        <td>80.1</td>
+                                        <td>73.03</td>
+                                        <td>11</td>
+                                        <td style="color: #DC143C;">+4</td>
+                                    </tr>
+                                    <tr>
+                                        <td>360</td>
+                                        <td>72.90</td>
+                                        <td>72.27</td>
+                                        <td>12</td>
+                                        <td style="color: #228B22;">-6</td>
+                                    </tr>
+                                    <tr>
+                                        <td>347</td>
+                                        <td>78.65</td>
+                                        <td>72.18</td>
+                                        <td>13</td>
+                                        <td style="color: #DC143C;">+3</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #228B22;" >359</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #228B22;" >357</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #228B22;" >355</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">2023年普通一志愿初试成绩区间分析</h3>
+                        <div class="table-container">
+                            <table class="admission-table">
+                                <thead>
+                                    <tr>
+                                        <th>初试成绩所属区间</th>
+                                        <th>总人数</th>
+                                        <th>被刷人数</th>
+                                        <th>录取人数</th>
+                                        <th>录取率</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>420分以上</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>100%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>390-399</td>
+                                        <td>2</td>
+                                        <td>0</td>
+                                        <td>2</td>
+                                        <td>100%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>380-389</td>
+                                        <td>2</td>
+                                        <td>0</td>
+                                        <td>2</td>
+                                        <td>100%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>360-369</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>88.89%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>350-359</td>
+                                        <td>9</td>
+                                        <td>3</td>
+                                        <td>6</td>
+                                        <td>66.67%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>350-359</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>100%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                                              <h3 style="font-size: 16px; text-align: center; margin: 20px 0; color: #6495ED;">2023年普通一志愿数据分析</h3>
+                        <div class="table-container">
+                            <table class="admission-table">
+                                <thead>
+                                    <tr>
+                                        <th>指标</th>
+                                        <th>数据</th>
+                                        <th>指标</th>
+                                        <th>数据</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>录取一志愿人数</td>
+                                        <td>13</td>
+                                        <td>一志愿录取率</td>
+                                        <td>81.2%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>淘汰一志愿人数</td>
+                                        <td>3</td>
+                                        <td>一志愿淘汰率</td>
+                                        <td>18.8%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>进复试最高分</td>
+                                        <td>421</td>
+                                        <td>录取最高分</td>
+                                        <td>421</td>
+                                    </tr>
+                                    <tr>
+                                        <td>进复试平均分</td>
+                                        <td>369</td>
+                                        <td>录取平均分</td>
+                                        <td>371</td>
+                                    </tr>
+                                    <tr>
+                                        <td>录取最低分</td>
+                                        <td>347</td>
+                                        <td>录取最低分</td>
+                                        <td>347</td>
+                                    </tr>
+                                    <tr>
+                                        <td>被刷平均分</td>
+                                        <td>357</td>
+                                        <td>被刷最高分</td>
+                                        <td>359</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 引入Chart.js库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    
+    <script>
+        // 实现内容切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有导航项
+            const navItems = document.querySelectorAll('.data-nav .nav-item');
+            // 获取所有内容区域
+            const tabContents = document.querySelectorAll('.data-content .tab-content');
+            // 获取导航栏的ul元素
+            const navUl = document.querySelector('.data-nav ul');
+            
+            // 为每个导航项添加点击事件监听
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 移除所有导航项的active类
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    // 为当前点击的导航项添加active类
+                    this.classList.add('active');
+                    
+                    // 获取当前导航项对应的内容区域ID
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 移除所有内容区域的active类
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    // 为对应的内容区域添加active类
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // 添加ul的active类，切换背景颜色
+                    navUl.classList.add('active');
+                    
+                    // 如果点击的是复试名单，重置年份导航到2025年
+                    if (tabId === 'reexamination-list') {
+                        const reexaminationYearItems = document.querySelectorAll('#reexamination-list .year-nav .year-item');
+                        const reexaminationYearContents = document.querySelectorAll('#reexamination-list .year-content');
+                        
+                        reexaminationYearItems.forEach(year => year.classList.remove('active'));
+                        reexaminationYearContents.forEach(content => content.classList.remove('active'));
+                        
+                        // 激活2025年
+                        document.querySelector('#reexamination-list .year-nav .year-item[data-year="2025"]').classList.add('active');
+                        document.getElementById('year-2025').classList.add('active');
+                    }
+                    
+                    // 如果点击的是录取名单，重置年份导航到2025年
+                    if (tabId === 'admission-list') {
+                        const admissionYearItems = document.querySelectorAll('#admission-list .year-nav .year-item');
+                        const admissionYearContents = document.querySelectorAll('#admission-list .year-content');
+                        
+                        admissionYearItems.forEach(year => year.classList.remove('active'));
+                        admissionYearContents.forEach(content => content.classList.remove('active'));
+                        
+                        // 激活2025年
+                        document.querySelector('#admission-list .year-nav .year-item[data-year="2025"]').classList.add('active');
+                        document.getElementById('admission-year-2025').classList.add('active');
+                    }
+                });
+            });
+            
+            // 页面加载时检查是否有默认选中的导航项
+            const hasActiveNav = Array.from(navItems).some(item => item.classList.contains('active'));
+            if (hasActiveNav) {
+                navUl.classList.add('active');
+            }
+            
+            // 复试名单年份导航功能
+            const yearItems = document.querySelectorAll('.year-nav .year-item');
+            const yearContents = document.querySelectorAll('.year-content');
+            
+            // 创建分数段分布分析条形图函数
+            function initScoreDistributionChart() {
+                const canvas = document.getElementById('scoreDistributionChart');
+                if (!canvas) return;
+                
+                // 检查是否已经初始化过图表
+                if (canvas.chartInstance) {
+                    return;
+                }
+                
+                const ctx5 = canvas.getContext('2d');
+                const scoreDistributionChart = new Chart(ctx5, {
+                    type: 'bar',
+                    data: {
+                        labels: ['100～109', '110～119', '120～129', '130～139'],
+                        datasets: [{
+                            label: '人数',
+                            data: [4,9,2,1],
+                            backgroundColor: '#4682B4',
+                            borderColor: '#4682B4',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            barThickness: 35
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '分数段',
+                                    font: {
+                                        size: 14
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: '人数',
+                                    font: {
+                                        size: 14
+                                    }
+                                },
+                                min: 0,
+                                max: 10,
+                                stepSize: 2,
+                                grid: {
+                                    display: true,
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            afterDraw: function(chart) {
+                                var ctx = chart.ctx;
+                                chart.data.datasets.forEach(function(dataset, datasetIndex) {
+                                    if (dataset.data.length > 0) {
+                                        chart.getDatasetMeta(datasetIndex).data.forEach(function(point, index) {
+                                            if (point && dataset.data[index] !== null && dataset.data[index] !== undefined) {
+                                                var x = point.getCenterPoint().x;
+                                                var y = point.y + 15;
+                                                ctx.fillStyle = '#333';
+                                                ctx.font = 'bold 12px Arial';
+                                                ctx.textAlign = 'center';
+                                                ctx.textBaseline = 'top';
+                                                ctx.fillText(dataset.data[index], x, y);
+                                            }
+                                        });
+                                    }
+                                });
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: {
+                                    size: 14
+                                },
+                                bodyFont: {
+                                    size: 12
+                                },
+                                padding: 12,
+                                cornerRadius: 4
+                            }
+                        }
+                    }
+                });
+                
+                canvas.chartInstance = scoreDistributionChart;
+            }
+            
+            function initScoreDistributionChart2023() {
+                const canvas = document.getElementById('scoreDistributionChart2023');
+                if (!canvas) return;
+                
+                if (canvas.chartInstance) {
+                    return;
+                }
+                
+                const ctx6 = canvas.getContext('2d');
+                const scoreDistributionChart2023 = new Chart(ctx6, {
+                    type: 'bar',
+                    data: {
+                        labels: ['100-109', '110-119', '120-129', '130-139'],
+                        datasets: [{
+                            label: '人数',
+                            data: [3, 3, 6, 4],
+                            backgroundColor: '#4682B4',
+                            borderColor: '#4682B4',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            barThickness: 35
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '分数段',
+                                    font: {
+                                        size: 14
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: '人数',
+                                    font: {
+                                        size: 14
+                                    }
+                                },
+                                min: 0,
+                                max: 6,
+                                stepSize: 1,
+                                grid: {
+                                    display: true,
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            afterDraw: function(chart) {
+                                var ctx = chart.ctx;
+                                chart.data.datasets.forEach(function(dataset, datasetIndex) {
+                                    if (dataset.data.length > 0) {
+                                        chart.getDatasetMeta(datasetIndex).data.forEach(function(point, index) {
+                                            if (point && dataset.data[index] !== null && dataset.data[index] !== undefined) {
+                                                var x = point.getCenterPoint().x;
+                                                var y = point.y + 15;
+                                                ctx.fillStyle = '#333';
+                                                ctx.font = 'bold 12px Arial';
+                                                ctx.textAlign = 'center';
+                                                ctx.textBaseline = 'top';
+                                                ctx.fillText(dataset.data[index], x, y);
+                                            }
+                                        });
+                                    }
+                                });
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: {
+                                    size: 14
+                                },
+                                bodyFont: {
+                                    size: 12
+                                },
+                                padding: 12,
+                                cornerRadius: 4
+                            }
+                        }
+                    }
+                });
+                
+                canvas.chartInstance = scoreDistributionChart2023;
+            }
+            
+            function initScoreDistributionChart2022() {
+                const canvas = document.getElementById('scoreDistributionChart2022');
+                if (!canvas) return;
+                
+                if (canvas.chartInstance) {
+                    return;
+                }
+                
+                const ctx7 = canvas.getContext('2d');
+                const scoreDistributionChart2022 = new Chart(ctx7, {
+                    type: 'bar',
+                    data: {
+                        labels: ['110-119', '120-129', '130-139', '140-149'],
+                        datasets: [{
+                            label: '人数',
+                            data: [4, 6,9, 1],
+                            backgroundColor: '#4682B4',
+                            borderColor: '#4682B4',
+                            borderWidth: 1,
+                            borderRadius: 4,
+                            barThickness: 35
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '分数段',
+                                    font: {
+                                        size: 14
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: '人数',
+                                    font: {
+                                        size: 14
+                                    }
+                                },
+                                min: 0,
+                                max: 10,
+                                stepSize: 2,
+                                grid: {
+                                    display: true,
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            afterDraw: function(chart) {
+                                var ctx = chart.ctx;
+                                chart.data.datasets.forEach(function(dataset, datasetIndex) {
+                                    if (dataset.data.length > 0) {
+                                        chart.getDatasetMeta(datasetIndex).data.forEach(function(point, index) {
+                                            if (point && dataset.data[index] !== null && dataset.data[index] !== undefined) {
+                                                var x = point.getCenterPoint().x;
+                                                var y = point.y + 15;
+                                                ctx.fillStyle = '#333';
+                                                ctx.font = 'bold 12px Arial';
+                                                ctx.textAlign = 'center';
+                                                ctx.textBaseline = 'top';
+                                                ctx.fillText(dataset.data[index], x, y);
+                                            }
+                                        });
+                                    }
+                                });
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: {
+                                    size: 14
+                                },
+                                bodyFont: {
+                                    size: 12
+                                },
+                                padding: 12,
+                                cornerRadius: 4
+                            }
+                        }
+                    }
+                });
+                
+                canvas.chartInstance = scoreDistributionChart2022;
+            }
+            
+            // 为每个年份导航项添加点击事件监听
+            yearItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 移除所有年份导航项的active类
+                    yearItems.forEach(year => year.classList.remove('active'));
+                    // 为当前点击的年份导航项添加active类
+                    this.classList.add('active');
+                    
+                    // 获取当前年份对应的内容区域ID
+                    const yearId = this.getAttribute('data-year');
+                    
+                    // 移除所有年份内容区域的active类
+                    yearContents.forEach(content => content.classList.remove('active'));
+                    // 为对应的内容区域添加active类
+                    const currentContent = document.getElementById('year-' + yearId);
+                    currentContent.classList.add('active');
+                    
+                    // 统一处理所有年份：显示表格，显示原有内容
+                    yearContents.forEach(content => {
+                        const table = content.querySelector('.admission-table');
+                        const originalP = content.querySelector('p');
+                        
+                        if (table) {
+                            table.style.display = 'table';
+                        }
+                        if (originalP) {
+                            originalP.style.display = 'block';
+                        }
+                    });
+                    // 根据年份初始化对应的图表
+                    switch(yearId) {
+                        case '2024':
+                            initScoreDistributionChart();
+                            break;
+                        case '2023':
+                            initScoreDistributionChart2023();
+                            break;
+                        case '2022':
+                            initScoreDistributionChart2022();
+                            break;
+                        // 可以继续添加其他年份的图表初始化函数
+                    }
+                });
+            });
+            
+            // 录取名单年份导航功能
+            const admissionYearItems = document.querySelectorAll('#admission-list .year-nav .year-item');
+            const admissionYearContents = document.querySelectorAll('#admission-list .year-content');
+            
+            admissionYearItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    admissionYearItems.forEach(year => year.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const yearId = this.getAttribute('data-year');
+                    
+                    admissionYearContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById('admission-year-' + yearId).classList.add('active');
+                });
+            });
+        });
+    </script>
+    
+    <!-- 创建折线图 -->
+    <script>
+        // 确保DOM加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取canvas元素
+            const ctx = document.getElementById('quotaChart').getContext('2d');
+            
+            // 创建折线图
+            const quotaChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2022', '2023', '2024', '2025', '2026'],
+                    datasets: [{
+                        label: '计划名额',
+                        data: [20, 17, 15, 15, 15],
+                        borderColor: '#004494',
+                        backgroundColor: 'rgba(0, 68, 148, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4, // 平滑折线
+                        pointBackgroundColor: '#004494',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointLabelFont: '12px Arial'
+                    }, {
+                        label: '统考名额',
+                        data: [16, 13, 12, 6,null],
+                        borderColor: '#FFA500',
+                        backgroundColor: 'rgba(255, 165, 0, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4, // 平滑折线
+                        pointBackgroundColor: '#FFA500',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointLabelFont: '12px Arial'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '年份',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            // 使用barThickness直接设置条形图宽度为18px，不再需要这些百分比设置
+                            categoryPercentage: 1 // 确保分类之间有足够空间
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '名额数量',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            min: 3,
+                            max: 21,
+                            stepSize: 3,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        // 自定义插件：添加数据标签
+                        afterDraw: function(chart) {
+                            var ctx = chart.ctx;
+                            chart.data.datasets.forEach(function(dataset, datasetIndex) {
+                                if (dataset.data.length > 0) {
+                                    chart.getDatasetMeta(datasetIndex).data.forEach(function(point, index) {
+                                        // 检查数据是否存在
+                                        if (dataset.data[index] !== null) {
+                                            // 获取点的位置
+                                            var x = point.getCenterPoint().x;
+                                            var y = point.getCenterPoint().y;
+                                            
+                                            // 根据数据集选择颜色
+                                            var labelColor = datasetIndex === 0 ? '#004494' : '#FFA500';
+                                            
+                                            // 设置文字样式
+                                            ctx.fillStyle = labelColor;
+                                            ctx.font = 'bold 12px Arial';
+                                            ctx.textAlign = 'center';
+                                            ctx.textBaseline = 'bottom';
+                                            
+                                            // 绘制数据标签
+                                            ctx.fillText(dataset.data[index], x, y - 10);
+                                        }
+                                    });
+                                }
+                            });
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 12
+                            },
+                            padding: 12,
+                            cornerRadius: 4
+                        }
+                    }
+                }
+            });
+
+            // 初始化报考人数折线图（带条形图）
+            var ctx2 = document.getElementById('applicationChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar', // 同时支持线图和条形图
+                data: {
+                    labels: ['2022', '2023', '2024', '2025'],
+                    datasets: [
+                        // 报考人数折线图
+                        {
+                            label: '报考人数',
+                            type: 'line',
+                            data: [123, 99, 108, 57],
+                            borderColor: '#004494',
+                            backgroundColor: 'rgba(0, 68, 148, 0)', // 完全透明，移除填充阴影
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4, // 平滑折线
+                            pointBackgroundColor: '#004494',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            yAxisID: 'y'
+                        },
+                        // 条形图数据集
+                        {
+                            label: '报录比',
+                            type: 'bar',
+                            data: [7.69, 7.62, 9, 9.5],
+                            backgroundColor: '#FFE4C4',
+                            borderColor: '#FFE4C4',
+                            borderWidth: 1,
+                            borderRadius: { topLeft: 10, topRight: 10 }, // 顶部弧形设计
+                            barThickness: 26, // 设置条形图宽度为26px
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '年份',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        // 主要纵坐标轴
+                        y: {
+                            title: {
+                                display: true,
+                                text: '报考人数',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            min: 130,
+                            max: 50,
+                            stepSize: 50,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        // 次要纵坐标轴
+                        y1: {
+                            position: 'right',
+                            title: {
+                                display: false, // 隐藏次要纵坐标轴标题
+                            },
+                            min: 0,
+                            max: 10,
+                            stepSize: 2,
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    // 直接返回刻度值，去掉括号及其内容
+                                    return value;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        // 自定义插件：添加数据标签
+                        afterDraw: function(chart) {
+                            var ctx = chart.ctx;
+                            chart.data.datasets.forEach(function(dataset, datasetIndex) {
+                                if (dataset.data.length > 0) {
+                                    chart.getDatasetMeta(datasetIndex).data.forEach(function(point, index) {
+                                        // 检查数据点是否存在且有值
+                                        if (point && dataset.data[index] !== null && dataset.data[index] !== undefined) {
+                                            // 获取点的位置
+                                            var x = point.getCenterPoint().x;
+                                            var y;
+                                            
+                                            // 根据图表类型设置不同的Y坐标
+                                            if (dataset.type === 'line') {
+                                                y = point.getCenterPoint().y;
+                                                // 设置文字样式
+                                                ctx.fillStyle = '#004494';
+                                                ctx.font = 'bold 12px Arial';
+                                                ctx.textAlign = 'center';
+                                                ctx.textBaseline = 'bottom';
+                                                // 在折线图每个点上方10px处绘制数据标签
+                                                ctx.fillText(dataset.data[index], x, y - 10);
+                                            } else if (dataset.type === 'bar') {
+                                                y = point.y + 15;
+                                                // 设置文字样式
+                                                ctx.fillStyle = '#FFA500';
+                                                ctx.font = 'bold 12px Arial';
+                                                ctx.textAlign = 'center';
+                                                ctx.textBaseline = 'top';
+                                                // 绘制数据标签
+                                                ctx.fillText(dataset.data[index], x, y);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 12
+                            },
+                            padding: 12,
+                            cornerRadius: 4
+                        }
+                    }
+                }
+            });
+
+            // 创建复试分数线与国家线折线图
+            const ctx3 = document.getElementById('reexaminationScoreChart').getContext('2d');
+            const reexaminationScoreChart = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: ['2022', '2023', '2024', '2025'],
+                    datasets: [
+                        // 复试分数折线
+                        {
+                            label: '复试分数',
+                            data: [372, 346, 360, 341],
+                            borderColor: 'orange',
+                            backgroundColor: 'rgba(255, 165, 0, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: 'orange',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 8,
+                            pointHoverRadius: 10,
+                            pointStyle: 'circle',
+                            yAxisID: 'y'
+                        },
+                        // 国家线折线
+                        {
+                            label: '国家线',
+                            data: [360, 346, 338, 323],
+                            borderColor: '#4682B4',
+                            backgroundColor: 'rgba(70, 130, 180, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#4682B4',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 8,
+                            pointHoverRadius: 10,
+                            pointStyle: 'rect',
+                            yAxisID: 'y'
+                        },
+                        // 录取最低分折线
+                        {
+                            label: '录取最低分',
+                            data: [null, null, null, 347, 361, 341],
+                            borderColor: '#F08080',
+                            backgroundColor: 'rgba(240, 128, 128, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#F08080',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 8,
+                            pointHoverRadius: 10,
+                            pointStyle: 'triangle',
+                            yAxisID: 'y'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '年份',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '分数',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            min: 320,
+                            max: 380,
+                            stepSize: 10,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 12
+                            },
+                            padding: 12,
+                            cornerRadius: 4
+                        }
+                    }
+                }
+            });
+
+            // 创建2025年复试专业课分数段分析条形图
+            const ctx4 = document.getElementById('professionalScoreChart').getContext('2d');
+            const professionalScoreChart = new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: ['100～109', '120～129', '130～139'],
+                    datasets: [{
+                        label: '人数',
+                        data: [1,4,3],
+                        backgroundColor: '#4682B4',
+                        borderColor: '#4682B4',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        barThickness: 35 // 设置条形图宽度为35px
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '分数段',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '人数',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            min: 0,
+                            max: 4,
+                            stepSize: 1,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        // 自定义插件：添加数据标签
+                        afterDraw: function(chart) {
+                            var ctx = chart.ctx;
+                            chart.data.datasets.forEach(function(dataset, datasetIndex) {
+                                if (dataset.data.length > 0) {
+                                    chart.getDatasetMeta(datasetIndex).data.forEach(function(point, index) {
+                                        // 检查数据点是否存在且有值
+                                        if (point && dataset.data[index] !== null && dataset.data[index] !== undefined) {
+                                            // 获取点的位置
+                                            var x = point.getCenterPoint().x;
+                                            var y = point.y + 15;
+                                            
+                                            // 设置文字样式
+                                            ctx.fillStyle = '#333';
+                                            ctx.font = 'bold 12px Arial';
+                                            ctx.textAlign = 'center';
+                                            ctx.textBaseline = 'top';
+                                            // 绘制数据标签
+                                            ctx.fillText(dataset.data[index], x, y);
+                                        }
+                                    });
+                                }
+                            });
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 12
+                            },
+                            padding: 12,
+                            cornerRadius: 4
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        .chart-container {
+            margin-top: 30px;
+            height: 400px;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

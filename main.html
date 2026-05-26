@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>叮咚802 - 主页面</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <header class="main-header">
+            <div class="header-left">
+                <img src="avatar.jpg" alt="用户头像" class="header-avatar" id="headerAvatar">
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="main.html" class="nav-item active">首页</a></li>
+                    <li><a href="exam-situation-analysis.html" class="nav-item">考情分析</a></li>
+                    <li><a href="admission-analysis.html" class="nav-item">考录分析</a></li>
+                    <li><a href="materials-summary.html" class="nav-item">资料汇总</a></li>
+                    <li><a href="knowledge-point-analysis.html" class="nav-item">考点分析</a></li>
+                    <li><a href="#" class="nav-item">课程视频</a></li>
+                    <li><a href="public-courses.html" class="nav-item">公共课</a></li>
+                    <li><a href="Quiz/quiz-app.html" class="nav-item">刷题中心</a></li>
+                </ul>
+            </nav>
+        </header>
+        <!-- 新增：header下方的两个内容区域 -->
+        <div class="header-content">
+            <!-- 区域1：研招信息 -->
+            <div class="info-section">
+                <h3 class="section-title">研招信息</h3>
+                <div class="info-links">
+                    <div class="link-row">
+                        <span class="link-item" onclick="window.location.href='exam-syllabus.html'">招生简章</span>
+                        <span class="separator">|</span>
+                        <span class="link-item" onclick="window.location.href='major-catalog.html'">专业目录</span>
+                    </div>
+                    <div class="link-row">
+                        <span class="link-item" onclick="window.location.href='reference-books.html'">参考用书</span>
+                        <span class="separator">|</span>
+                        <span class="link-item" onclick="window.location.href='cost-details.html'">费用明细</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 区域2：考试咨讯 -->
+            <div class="info-section">
+                <h3 class="section-title">考研指南</h3>
+                <div class="info-links">
+                    <div class="link-row">
+                        <span class="link-item" onclick="window.location.href='preliminary-guide.html'">初试指南</span>
+                        <span class="separator">|</span>
+                        <span class="link-item" onclick="window.location.href='reexamination-guide.html'">复试指南</span>
+                    </div>
+                    <div class="link-row">
+                        <span class="link-item" onclick="window.location.href='admission-analysis.html'">考录分析</span>
+                        <span class="separator">|</span>
+                        <span class="link-item" onclick="window.location.href='reexamination-line.html'">复试线</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <main class="main-content">
+            <div class="content-area">
+                <div class="latest-posts-section">
+                    <div class="latest-posts-left">
+                        <h3 class="section-title">⏰ 最新发布</h3>
+                        <ul class="posts-list">
+                            <li class="post-item">
+                                <a href="usage-guide.html" class="post-link">
+                                    <span class="post-title">📢 网站使用说明</span>
+                                    <span class="post-time">2026-03-02</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="latest-posts-right">
+                        <h3 class="section-title">🔍独家分析</h3>
+                        <ul class="posts-list">
+                            <li class="post-item">
+                                <a href="Exclusive analysis/2026年西财考研报考人数与分数线预测.html" class="post-link">
+                                    <span class="post-title">独家 | 2026年西财考研报考人数与分数线预测</span>
+                                    <span class="post-time">2026-01-24</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
